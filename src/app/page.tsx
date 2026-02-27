@@ -22,8 +22,8 @@ export default function Home() {
           <h2>Causal AI — and We’re Giving It Away</h2>
           
           <div style={{ marginTop: '3rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-            <a href="#spec" className="glass-card" style={{ padding: '1rem 2rem', textDecoration: 'none', color: 'inherit' }}>Read the Spec</a>
-            <a href="#models" className="glass-card" style={{ padding: '1rem 2rem', textDecoration: 'none', color: 'inherit' }}>Explore Models</a>
+            <a href="/spec" className="glass-card" style={{ padding: '1rem 2rem', textDecoration: 'none', color: 'inherit' }}>Read the Spec</a>
+            <a href="/models" className="glass-card" style={{ padding: '1rem 2rem', textDecoration: 'none', color: 'inherit' }}>Explore Models</a>
           </div>
         </div>
       </section>
