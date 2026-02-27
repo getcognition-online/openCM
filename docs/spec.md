@@ -2,7 +2,7 @@
 
 **Version**: 1.0 (Stable)  
 **Status**: Published  
-**Authors**: Jamie Nixx - Founder - Cognition Universal Intel  
+**Authors**: Cognition Universal Intelligence Development Team  
 **Date**: February 2026
 
 ---

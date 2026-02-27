@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "OpenCM 1.0 | The Universal Standard for Causal AI",
   description: "OpenCM 1.0 is the first open, language-agnostic, JSON-based specification for Structural Causal Models (SCMs). Bringing portability and transparency to Causal AI.",
   keywords: ["Causal AI", "Structural Causal Models", "SCM", "OpenCM", "Judea Pearl", "Causal Inference", "Machine Learning Standards"],
-  authors: [{ name: "Jamie Nixx", url: "https://getcognition.online" }],
+  authors: [{ name: "Cognition Universal Intelligence Development Team", url: "https://getcognition.online" }],
   openGraph: {
     title: "OpenCM 1.0 | The Universal Standard for Causal AI",
     description: "Bringing portability, composability, and transparency to Structural Causal Models.",
