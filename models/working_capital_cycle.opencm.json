@@ -1,0 +1,38 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "working_capital_cycle",
+    "name": "Working Capital Cycle",
+    "version": "1.0.0",
+    "domain": "finance",
+    "description": "Cash conversion cycle model — how inventory, receivables, and payables management causally drive liquidity and operational efficiency."
+  },
+  "variables": {
+    "InventoryDays": {"type": "continuous", "domain": [0, 365], "unit": "days", "description": "Days inventory outstanding (DIO)"},
+    "ReceivableDays": {"type": "continuous", "domain": [0, 180], "unit": "days", "description": "Days sales outstanding (DSO)"},
+    "PayableDays": {"type": "continuous", "domain": [0, 180], "unit": "days", "description": "Days payable outstanding (DPO)"},
+    "CashConversionCycle": {"type": "continuous", "domain": [-90, 365], "unit": "days", "description": "DIO + DSO - DPO"},
+    "WorkingCapitalNeed": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Net working capital required"},
+    "Liquidity": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Cash availability for operations"},
+    "SupplierRelations": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Quality of supplier relationships"}
+  },
+  "edges": [
+    {"source": "InventoryDays", "target": "CashConversionCycle", "type": "causes", "strength": 0.80},
+    {"source": "ReceivableDays", "target": "CashConversionCycle", "type": "causes", "strength": 0.75},
+    {"source": "PayableDays", "target": "CashConversionCycle", "type": "inhibits", "strength": 0.70},
+    {"source": "CashConversionCycle", "target": "WorkingCapitalNeed", "type": "causes", "strength": 0.85},
+    {"source": "WorkingCapitalNeed", "target": "Liquidity", "type": "inhibits", "strength": 0.80},
+    {"source": "PayableDays", "target": "SupplierRelations", "type": "inhibits", "strength": 0.55, "description": "Stretching payables strains supplier trust"}
+  ],
+  "structural_equations": {
+    "CashConversionCycle": "InventoryDays + ReceivableDays - PayableDays",
+    "WorkingCapitalNeed": "0.01 * CashConversionCycle",
+    "Liquidity": "1.0 - 0.80*WorkingCapitalNeed"
+  },
+  "assumptions": ["Revenue is constant during cycle", "Seasonality not modeled", "Working capital scales linearly with cycle time"],
+  "metadata": {
+    "author": "GetCognition",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["working-capital", "cash-cycle", "liquidity", "treasury", "operations"]
+  }
+}

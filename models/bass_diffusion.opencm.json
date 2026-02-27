@@ -1,0 +1,30 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "bass_diffusion",
+    "name": "Bass Diffusion Model",
+    "version": "1.0.0",
+    "domain": "marketing",
+    "description": "Frank Bass's model for new product adoption, driven by innovators (coefficient p) and imitators (coefficient q)."
+  },
+  "variables": {
+    "InnovationCoefficient": { "type": "continuous", "domain": [0, 0.1], "unit": "p", "description": "Propensity of innovators to adopt" },
+    "ImitationCoefficient": { "type": "continuous", "domain": [0, 1.0], "unit": "q", "description": "Influence of existing adopters (word of mouth)" },
+    "MarketPotential": { "type": "continuous", "domain": [0, 1000000], "unit": "users", "description": "Total addressable market size" },
+    "CurrentAdopters": { "type": "continuous", "domain": [0, 1000000], "unit": "users" },
+    "NewAdopters": { "type": "continuous", "domain": [0, 100000], "unit": "users/period" }
+  },
+  "edges": [
+    {"source": "InnovationCoefficient", "target": "NewAdopters", "type": "causes", "strength": 0.70},
+    {"source": "ImitationCoefficient", "target": "NewAdopters", "type": "causes", "strength": 0.90},
+    {"source": "CurrentAdopters", "target": "NewAdopters", "type": "causes", "strength": 0.50, "description": "Network effects drive world-of-mouth"}
+  ],
+  "structural_equations": {
+    "NewAdopters": "(InnovationCoefficient + ImitationCoefficient * (CurrentAdopters / MarketPotential)) * (MarketPotential - CurrentAdopters)"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Frank Bass, 1969)",
+    "tags": ["diffusion", "adoption", "innovation", "marketing", "forecast"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

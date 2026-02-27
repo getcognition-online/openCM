@@ -1,0 +1,36 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "nps_drivers",
+    "name": "NPS Causal Drivers",
+    "version": "1.0.0",
+    "domain": "marketing",
+    "description": "Models the causal relationships between service quality, product satisfaction, and the Net Promoter Score (NPS)."
+  },
+  "variables": {
+    "ServiceQuality": { "type": "continuous", "domain": [0, 10], "unit": "score" },
+    "ProductValue": { "type": "continuous", "domain": [0, 10], "unit": "score" },
+    "BrandSentiment": { "type": "continuous", "domain": [-1, 1], "unit": "sentiment" },
+    "PromoterPropensity": { "type": "continuous", "domain": [0, 1], "unit": "prob" },
+    "DetractorPropensity": { "type": "continuous", "domain": [0, 1], "unit": "prob" },
+    "NPS": { "type": "continuous", "domain": [-100, 100], "unit": "score" }
+  },
+  "edges": [
+    {"source": "ServiceQuality", "target": "PromoterPropensity", "type": "causes", "strength": 0.65},
+    {"source": "ServiceQuality", "target": "DetractorPropensity", "type": "inhibits", "strength": 0.80},
+    {"source": "ProductValue", "target": "PromoterPropensity", "type": "causes", "strength": 0.70},
+    {"source": "BrandSentiment", "target": "PromoterPropensity", "type": "causes", "strength": 0.40},
+    {"source": "PromoterPropensity", "target": "NPS", "type": "causes", "strength": 1.0},
+    {"source": "DetractorPropensity", "target": "NPS", "type": "inhibits", "strength": 1.0}
+  ],
+  "structural_equations": {
+    "NPS": "100 * (PromoterPropensity - DetractorPropensity)",
+    "PromoterPropensity": "0.1 + 0.04*ProductValue + 0.03*ServiceQuality + 0.1*BrandSentiment",
+    "DetractorPropensity": "0.9 - 0.05*ServiceQuality - 0.02*ProductValue"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["marketing", "nps", "satisfaction", "retention"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

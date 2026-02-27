@@ -1,0 +1,32 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "cyber_security_impact",
+    "name": "Cyber Security Impact",
+    "version": "1.0.0",
+    "domain": "technology",
+    "description": "Causal model of vulnerability, threat, and mitigation impact on the probability of significant financial loss."
+  },
+  "variables": {
+    "VulnerabilityExposure": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "ThreatIntensity": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "MitigationStrength": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "BreachProbability": { "type": "continuous", "domain": [0, 1], "unit": "prob" },
+    "FinancialLossPotential": { "type": "continuous", "domain": [0, 10000000], "unit": "currency" }
+  },
+  "edges": [
+    {"source": "VulnerabilityExposure", "target": "BreachProbability", "type": "causes", "strength": 0.85},
+    {"source": "ThreatIntensity", "target": "BreachProbability", "type": "causes", "strength": 0.70},
+    {"source": "MitigationStrength", "target": "BreachProbability", "type": "inhibits", "strength": 0.90},
+    {"source": "BreachProbability", "target": "FinancialLossPotential", "type": "causes", "strength": 0.95}
+  ],
+  "structural_equations": {
+    "BreachProbability": "max(0, (VulnerabilityExposure + ThreatIntensity) / 2.0 - 0.8*MitigationStrength)",
+    "FinancialLossPotential": "BreachProbability * 10000000"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["technology", "security", "risk", "finance"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

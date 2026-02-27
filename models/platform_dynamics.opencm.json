@@ -1,0 +1,33 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "platform_dynamics",
+    "name": "Platform Dynamics",
+    "version": "1.0.0",
+    "domain": "technology",
+    "description": "Models the supply-side and demand-side network effects that drive platform growth and market lock-in."
+  },
+  "variables": {
+    "UserAdoption": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "DeveloperEcosystem": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "NetworkEffects": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "SwitchingCosts": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "MarketDominance": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "UserAdoption", "target": "DeveloperEcosystem", "type": "causes", "strength": 0.85, "description": "Developers follow users (Cross-side effects)"},
+    {"source": "DeveloperEcosystem", "target": "NetworkEffects", "type": "causes", "strength": 0.80, "description": "Developer richness drives network value"},
+    {"source": "UserAdoption", "target": "NetworkEffects", "type": "causes", "strength": 0.90},
+    {"source": "NetworkEffects", "target": "SwitchingCosts", "type": "causes", "strength": 0.75},
+    {"source": "SwitchingCosts", "target": "MarketDominance", "type": "causes", "strength": 0.80}
+  ],
+  "structural_equations": {
+    "NetworkEffects": "UserAdoption * DeveloperEcosystem",
+    "MarketDominance": "0.2*UserAdoption + 0.8*SwitchingCosts"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["technology", "platform", "network-effects", "strategy"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

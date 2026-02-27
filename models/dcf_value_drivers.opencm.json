@@ -1,0 +1,47 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "dcf_value_drivers",
+    "name": "DCF Value Drivers",
+    "version": "1.0.0",
+    "domain": "finance",
+    "description": "Discounted Cash Flow value driver tree — causal decomposition of how revenue growth, margins, and capital efficiency drive intrinsic firm value."
+  },
+  "variables": {
+    "RevenueGrowth": {"type": "continuous", "domain": [-0.3, 0.5], "unit": "%", "description": "Annual revenue growth rate"},
+    "OperatingMargin": {"type": "continuous", "domain": [0, 0.5], "unit": "%", "description": "EBIT / Revenue"},
+    "TaxRate": {"type": "continuous", "domain": [0, 0.5], "unit": "%", "description": "Effective tax rate"},
+    "NOPAT": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Net operating profit after tax (normalized)"},
+    "CapitalInvestment": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Reinvestment rate (CAPEX + working capital changes)"},
+    "ROIC": {"type": "continuous", "domain": [0, 0.5], "unit": "%", "description": "Return on invested capital"},
+    "WACC": {"type": "continuous", "domain": [0, 0.3], "unit": "%", "description": "Weighted average cost of capital"},
+    "FreeCashFlow": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Free cash flow to firm (normalized)"},
+    "EnterpriseValue": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Intrinsic enterprise value (normalized)"}
+  },
+  "edges": [
+    {"source": "RevenueGrowth", "target": "NOPAT", "type": "causes", "strength": 0.65},
+    {"source": "OperatingMargin", "target": "NOPAT", "type": "causes", "strength": 0.80},
+    {"source": "TaxRate", "target": "NOPAT", "type": "inhibits", "strength": 0.50},
+    {"source": "NOPAT", "target": "FreeCashFlow", "type": "causes", "strength": 0.85},
+    {"source": "CapitalInvestment", "target": "FreeCashFlow", "type": "inhibits", "strength": 0.70},
+    {"source": "CapitalInvestment", "target": "RevenueGrowth", "type": "causes", "strength": 0.45, "description": "Investment fuels future growth"},
+    {"source": "NOPAT", "target": "ROIC", "type": "causes", "strength": 0.75},
+    {"source": "CapitalInvestment", "target": "ROIC", "type": "inhibits", "strength": 0.55},
+    {"source": "FreeCashFlow", "target": "EnterpriseValue", "type": "causes", "strength": 0.80},
+    {"source": "ROIC", "target": "EnterpriseValue", "type": "causes", "strength": 0.60},
+    {"source": "WACC", "target": "EnterpriseValue", "type": "inhibits", "strength": 0.70}
+  ],
+  "structural_equations": {
+    "NOPAT": "OperatingMargin * (1 + RevenueGrowth) * (1 - TaxRate)",
+    "FreeCashFlow": "NOPAT - CapitalInvestment",
+    "ROIC": "NOPAT / (CapitalInvestment + 0.01)",
+    "EnterpriseValue": "FreeCashFlow / (WACC - RevenueGrowth * 0.5 + 0.01)"
+  },
+  "assumptions": ["Constant growth rate in terminal value", "WACC is stable", "Reinvestment needs are proportional to growth"],
+  "metadata": {
+    "author": "GetCognition (adapted from McKinsey Valuation framework)",
+    "citation": "Koller, T., Goedhart, M., & Wessels, D. (2020). Valuation. Wiley.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["dcf", "valuation", "cash-flow", "roic", "wacc", "growth"]
+  }
+}

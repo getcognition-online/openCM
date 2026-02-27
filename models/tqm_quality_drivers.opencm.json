@@ -1,0 +1,32 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "tqm_quality_drivers",
+    "name": "TQM Quality Drivers",
+    "version": "1.0.0",
+    "domain": "operations",
+    "description": "Models the causal drivers of Total Quality Management (TQM), linking leadership, training, and process control to customer satisfaction."
+  },
+  "variables": {
+    "LeadershipCommitment": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "EmployeeTraining": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "ProcessControl": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "ProductQuality": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "CustomerSatisfaction": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "LeadershipCommitment", "target": "EmployeeTraining", "type": "causes", "strength": 0.80},
+    {"source": "EmployeeTraining", "target": "ProcessControl", "type": "causes", "strength": 0.70},
+    {"source": "ProcessControl", "target": "ProductQuality", "type": "causes", "strength": 0.85},
+    {"source": "ProductQuality", "target": "CustomerSatisfaction", "type": "causes", "strength": 0.90}
+  ],
+  "structural_equations": {
+    "ProductQuality": "0.1 + 0.9*ProcessControl",
+    "CustomerSatisfaction": "0.2 + 0.8*ProductQuality"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["operations", "quality", "tqm", "management"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "network_effects_platform",
+    "name": "Network Effects & Platform Dynamics",
+    "version": "1.0.0",
+    "domain": "technology",
+    "description": "Causal model of multi-sided platform dynamics — how user acquisition, network effects, and platform quality drive winner-take-all market outcomes."
+  },
+  "variables": {
+    "PlatformInvestment": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Capital invested in platform development and growth"},
+    "PlatformQuality": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Core platform feature quality and reliability"},
+    "ContentSupply": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Volume and quality of platform content/supply side"},
+    "UserAcquisitionRate": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "Rate of new user acquisition"},
+    "SwitchingCost": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "User lock-in and data portability barriers"},
+    "UserRetention": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "User retention and engagement rate"},
+    "UserBaseSize": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Size of the user base relative to TAM"},
+    "NetworkValue": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Value derived from network effects (Metcalfe's law)"},
+    "PlatformRevenue": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Platform monetization (normalized)"},
+    "MarketDominance": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Winner-take-all market position"}
+  },
+  "edges": [
+    {"source": "PlatformInvestment", "target": "PlatformQuality", "type": "causes", "strength": 0.70, "description": "Investment drives platform quality"},
+    {"source": "PlatformInvestment", "target": "ContentSupply", "type": "causes", "strength": 0.50, "description": "Investment attracts and subsidizes creators"},
+    {"source": "PlatformQuality", "target": "UserAcquisitionRate", "type": "causes", "strength": 0.60},
+    {"source": "PlatformQuality", "target": "UserRetention", "type": "causes", "strength": 0.65},
+    {"source": "ContentSupply", "target": "UserAcquisitionRate", "type": "causes", "strength": 0.50},
+    {"source": "PlatformQuality", "target": "SwitchingCost", "type": "causes", "strength": 0.40, "description": "Quality platform creates embedded habits"},
+    {"source": "SwitchingCost", "target": "UserRetention", "type": "causes", "strength": 0.60},
+    {"source": "UserAcquisitionRate", "target": "UserBaseSize", "type": "causes", "strength": 0.75},
+    {"source": "UserRetention", "target": "UserBaseSize", "type": "causes", "strength": 0.70},
+    {"source": "UserBaseSize", "target": "NetworkValue", "type": "causes", "strength": 0.80, "description": "Metcalfe's law: value ∝ n²"},
+    {"source": "UserBaseSize", "target": "PlatformRevenue", "type": "causes", "strength": 0.75},
+    {"source": "NetworkValue", "target": "MarketDominance", "type": "causes", "strength": 0.70},
+    {"source": "PlatformRevenue", "target": "MarketDominance", "type": "causes", "strength": 0.55}
+  ],
+  "structural_equations": {
+    "PlatformQuality": "0.2 + 0.60*PlatformInvestment",
+    "UserAcquisitionRate": "0.1 + 0.30*PlatformQuality + 0.20*ContentSupply",
+    "UserRetention": "0.3 + 0.30*PlatformQuality + 0.25*SwitchingCost",
+    "UserBaseSize": "0.05 + 0.45*UserAcquisitionRate + 0.40*UserRetention",
+    "NetworkValue": "0.05 + 0.70 * UserBaseSize * UserBaseSize",
+    "MarketDominance": "0.1 + 0.40*NetworkValue + 0.25*PlatformRevenue"
+  },
+  "assumptions": [
+    "Multi-homing is limited (users predominantly use one platform)",
+    "Network effects are same-side and cross-side",
+    "The flywheel (investment → quality → users → revenue → reinvestment) is linearized as a single snapshot; in reality this is a reinforcing loop over time",
+    "Market structure tends toward monopoly/oligopoly"
+  ],
+  "metadata": {
+    "author": "GetCognition (adapted from Parker, Van Alstyne & Choudary, 2016)",
+    "citation": "Parker, G., Van Alstyne, M., & Choudary, S.P. (2016). Platform Revolution. W.W. Norton.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["platform", "network-effects", "winner-take-all", "marketplace", "metcalfe", "flywheel"]
+  }
+}

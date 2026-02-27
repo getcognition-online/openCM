@@ -1,0 +1,34 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "brand_equity_aaker",
+    "name": "Brand Equity (Aaker Model)",
+    "version": "1.0.0",
+    "domain": "marketing",
+    "description": "David Aaker's framework for brand equity focusing on awareness, loyalty, perceived quality, and associations."
+  },
+  "variables": {
+    "BrandAwareness": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "BrandLoyalty": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "PerceivedQuality": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "BrandAssociations": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "BrandEquity": { "type": "continuous", "domain": [0, 1], "unit": "equity_score" },
+    "PricePremium": { "type": "continuous", "domain": [0, 1], "unit": "premium_index" }
+  },
+  "edges": [
+    {"source": "BrandAwareness", "target": "BrandEquity", "type": "causes", "strength": 0.40},
+    {"source": "BrandLoyalty", "target": "BrandEquity", "type": "causes", "strength": 0.85},
+    {"source": "PerceivedQuality", "target": "BrandEquity", "type": "causes", "strength": 0.70},
+    {"source": "BrandAssociations", "target": "BrandEquity", "type": "causes", "strength": 0.50},
+    {"source": "BrandEquity", "target": "PricePremium", "type": "causes", "strength": 0.90, "description": "High equity allows for higher margins"}
+  ],
+  "structural_equations": {
+    "BrandEquity": "0.15*BrandAwareness + 0.4*BrandLoyalty + 0.25*PerceivedQuality + 0.2*BrandAssociations",
+    "PricePremium": "0.05 + 0.85*BrandEquity"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from David Aaker, 1991)",
+    "tags": ["marketing", "brand", "equity", "loyalty"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

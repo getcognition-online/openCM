@@ -1,0 +1,34 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "maslow_hierarchy",
+    "name": "Maslow's Hierarchy of Needs",
+    "version": "1.0.0",
+    "domain": "psychology",
+    "description": "Abraham Maslow's framework for human motivation, where fulfillment of lower-order needs causes the emergence of higher-order needs."
+  },
+  "variables": {
+    "PhysiologicalNeeds": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "SafetyNeeds": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "SocialNeeds": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "EsteemNeeds": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "SelfActualization": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "PhysiologicalNeeds", "target": "SafetyNeeds", "type": "causes", "strength": 0.85},
+    {"source": "SafetyNeeds", "target": "SocialNeeds", "type": "causes", "strength": 0.80},
+    {"source": "SocialNeeds", "target": "EsteemNeeds", "type": "causes", "strength": 0.75},
+    {"source": "EsteemNeeds", "target": "SelfActualization", "type": "causes", "strength": 0.70}
+  ],
+  "structural_equations": {
+    "SafetyNeeds": "0.1 + 0.9*PhysiologicalNeeds",
+    "SocialNeeds": "0.1 + 0.85*SafetyNeeds",
+    "EsteemNeeds": "0.1 + 0.8*SocialNeeds",
+    "SelfActualization": "0.1 + 0.7*EsteemNeeds"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Abraham Maslow, 1943)",
+    "tags": ["psychology", "motivation", "needs", "behavior"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

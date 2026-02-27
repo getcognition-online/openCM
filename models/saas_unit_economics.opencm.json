@@ -1,0 +1,36 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "saas_unit_economics",
+    "name": "SaaS Unit Economics",
+    "version": "1.0.0",
+    "domain": "technology",
+    "description": "Causal model of LTV, CAC, and Payback Period for subscription-based business models."
+  },
+  "variables": {
+    "CAC": { "type": "continuous", "domain": [0, 5000], "unit": "currency", "description": "Customer Acquisition Cost" },
+    "ARPU": { "type": "continuous", "domain": [0, 1000], "unit": "currency/mo", "description": "Average Revenue Per User" },
+    "ChurnRate": { "type": "continuous", "domain": [0, 0.5], "unit": "rate/mo" },
+    "LTV": { "type": "continuous", "domain": [0, 100000], "unit": "currency", "description": "Lifetime Value" },
+    "LTV_CAC_Ratio": { "type": "continuous", "domain": [0, 20], "unit": "ratio" },
+    "PaybackPeriod": { "type": "continuous", "domain": [0, 36], "unit": "months" }
+  },
+  "edges": [
+    {"source": "ARPU", "target": "LTV", "type": "causes", "strength": 1.0},
+    {"source": "ChurnRate", "target": "LTV", "type": "inhibits", "strength": 0.95},
+    {"source": "CAC", "target": "LTV_CAC_Ratio", "type": "inhibits", "strength": 1.0},
+    {"source": "LTV", "target": "LTV_CAC_Ratio", "type": "causes", "strength": 1.0},
+    {"source": "CAC", "target": "PaybackPeriod", "type": "causes", "strength": 0.80},
+    {"source": "ARPU", "target": "PaybackPeriod", "type": "inhibits", "strength": 0.90}
+  ],
+  "structural_equations": {
+    "LTV": "ARPU / ChurnRate",
+    "LTV_CAC_Ratio": "LTV / CAC",
+    "PaybackPeriod": "CAC / ARPU"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["technology", "saas", "ltv", "cac", "economics"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

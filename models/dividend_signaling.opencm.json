@@ -1,0 +1,30 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "dividend_signaling",
+    "name": "Dividend Signaling",
+    "version": "1.0.0",
+    "domain": "finance",
+    "description": "Models the causal impact of dividend changes on market perception of future earnings and stock price."
+  },
+  "variables": {
+    "DividendChange": { "type": "continuous", "domain": [-0.5, 0.5], "unit": "rate" },
+    "EarningsExpectation": { "type": "continuous", "domain": [-0.5, 0.5], "unit": "rate" },
+    "InformationAsymmetry": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "StockPriceMovement": { "type": "continuous", "domain": [-0.3, 0.3], "unit": "rate" }
+  },
+  "edges": [
+    {"source": "DividendChange", "target": "EarningsExpectation", "type": "causes", "strength": 0.85, "description": "Dividends signal management's earnings confidence"},
+    {"source": "InformationAsymmetry", "target": "StockPriceMovement", "type": "causes", "strength": 0.40, "description": "Higher asymmetry makes signals more powerful"},
+    {"source": "EarningsExpectation", "target": "StockPriceMovement", "type": "causes", "strength": 0.90}
+  ],
+  "structural_equations": {
+    "EarningsExpectation": "0.6 * DividendChange",
+    "StockPriceMovement": "0.5 * EarningsExpectation * (1.0 + InformationAsymmetry)"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["finance", "dividends", "signaling", "market-perception"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

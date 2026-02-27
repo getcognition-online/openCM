@@ -1,0 +1,33 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "gtm_readiness_model",
+    "name": "Librarian GTM Readiness",
+    "version": "1.0.0",
+    "domain": "meta-logic",
+    "description": "Models the causal drivers required to transition the Librarian from a private engine to a market-dominant SaaS platform."
+  },
+  "variables": {
+    "TechnicalAuthority": { "type": "continuous", "domain": [0, 1], "unit": "index", "description": "Current self-assessment authority." },
+    "OnboardingFriction": { "type": "continuous", "domain": [0, 1], "unit": "index", "description": "The ease of a new user setting up their own 'Postmaster'." },
+    "MarketSaliency": { "type": "continuous", "domain": [0, 1], "unit": "index", "description": "Search and brand visibility (SEO, Hype)." },
+    "MonetizationEngine": { "type": "continuous", "domain": [0, 1], "unit": "index", "description": "Presence of Stripe, JWT, and SaaS unit economics." },
+    "LTV_Potential": { "type": "continuous", "domain": [0, 100000], "unit": "currency" },
+    "LaunchVelocity": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "TechnicalAuthority", "target": "LaunchVelocity", "type": "causes", "strength": 0.90},
+    {"source": "OnboardingFriction", "target": "LaunchVelocity", "type": "inhibits", "strength": 0.85},
+    {"source": "MarketSaliency", "target": "LaunchVelocity", "type": "causes", "strength": 0.70},
+    {"source": "MonetizationEngine", "target": "LTV_Potential", "type": "causes", "strength": 0.95}
+  ],
+  "structural_equations": {
+    "LaunchVelocity": "0.5 * TechnicalAuthority - 0.3 * OnboardingFriction + 0.2 * MarketSaliency",
+    "LTV_Potential": "MonetizationEngine * 50000"
+  },
+  "metadata": {
+    "author": "The Librarian",
+    "tags": ["gtm", "strategy", "launch", "saas"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

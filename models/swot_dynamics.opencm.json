@@ -1,0 +1,41 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "swot_dynamics",
+    "name": "SWOT Dynamics",
+    "version": "1.0.0",
+    "domain": "strategy",
+    "description": "Dynamic causal model of SWOT analysis — how internal strengths/weaknesses interact with external opportunities/threats to drive strategic outcomes."
+  },
+  "variables": {
+    "InternalStrengths": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Core competencies, unique resources, brand equity"},
+    "InternalWeaknesses": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Skill gaps, resource constraints, process inefficiencies"},
+    "ExternalOpportunities": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Market growth, regulatory changes, technology shifts"},
+    "ExternalThreats": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Competitive pressure, disruption risk, macro headwinds"},
+    "StrategicPosition": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Overall strategic positioning strength"},
+    "GrowthPotential": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Ability to capture growth"},
+    "RiskExposure": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Vulnerability to negative outcomes"}
+  },
+  "edges": [
+    {"source": "InternalStrengths", "target": "StrategicPosition", "type": "causes", "strength": 0.70},
+    {"source": "InternalWeaknesses", "target": "StrategicPosition", "type": "inhibits", "strength": 0.60},
+    {"source": "InternalStrengths", "target": "GrowthPotential", "type": "causes", "strength": 0.55},
+    {"source": "ExternalOpportunities", "target": "GrowthPotential", "type": "causes", "strength": 0.75},
+    {"source": "ExternalThreats", "target": "RiskExposure", "type": "causes", "strength": 0.80},
+    {"source": "InternalWeaknesses", "target": "RiskExposure", "type": "causes", "strength": 0.65},
+    {"source": "StrategicPosition", "target": "GrowthPotential", "type": "causes", "strength": 0.40},
+    {"source": "RiskExposure", "target": "GrowthPotential", "type": "inhibits", "strength": 0.35}
+  ],
+  "structural_equations": {
+    "StrategicPosition": "0.5 + 0.35*InternalStrengths - 0.30*InternalWeaknesses",
+    "GrowthPotential": "0.3 + 0.25*InternalStrengths + 0.30*ExternalOpportunities + 0.15*StrategicPosition - 0.10*RiskExposure",
+    "RiskExposure": "0.2 + 0.35*ExternalThreats + 0.25*InternalWeaknesses"
+  },
+  "assumptions": ["Strengths and weaknesses are independently assessable", "External factors are exogenous to firm actions in the short term"],
+  "metadata": {
+    "author": "GetCognition (adapted from Albert Humphrey, 1960s)",
+    "citation": "Humphrey, A. (1960s). SWOT Analysis framework, Stanford Research Institute.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["swot", "strategic-planning", "positioning", "risk"]
+  }
+}

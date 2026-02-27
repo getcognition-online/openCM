@@ -1,0 +1,32 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "six_sigma_dmaic",
+    "name": "Six Sigma Process Quality",
+    "version": "1.0.0",
+    "domain": "operations",
+    "description": "Models the impact of DMAIC (Define, Measure, Analyze, Improve, Control) interventions on process defect rates."
+  },
+  "variables": {
+    "AnalyzeSuccess": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "ImplementationFidelity": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "ProcessStandardization": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "DefectRate": { "type": "continuous", "domain": [0, 0.5], "unit": "yield" },
+    "SigmaLevel": { "type": "continuous", "domain": [1, 6], "unit": "sigma" }
+  },
+  "edges": [
+    {"source": "AnalyzeSuccess", "target": "DefectRate", "type": "inhibits", "strength": 0.75},
+    {"source": "ImplementationFidelity", "target": "DefectRate", "type": "inhibits", "strength": 0.85},
+    {"source": "ProcessStandardization", "target": "DefectRate", "type": "inhibits", "strength": 0.60},
+    {"source": "DefectRate", "target": "SigmaLevel", "type": "inhibits", "strength": 1.0}
+  ],
+  "structural_equations": {
+    "DefectRate": "max(0.0000034, 0.4 - 0.15*AnalyzeSuccess - 0.2*ImplementationFidelity - 0.05*ProcessStandardization)",
+    "SigmaLevel": "3.0 - log(DefectRate) / 2.0"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["operations", "quality", "six-sigma", "lean", "dmaic"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

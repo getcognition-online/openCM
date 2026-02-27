@@ -1,0 +1,46 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "supply_chain_risk",
+    "name": "Supply Chain Risk Model",
+    "version": "1.0.0",
+    "domain": "operations",
+    "description": "Causal model of supply chain disruption risk — how supplier concentration, geographic spread, inventory buffers, and demand variability interact to drive supply chain resilience."
+  },
+  "variables": {
+    "SupplierConcentration": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "HHI of supplier base (1 = single source)"},
+    "GeographicSpread": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Geographic diversity of supply base"},
+    "LeadTimeVariability": {"type": "continuous", "domain": [0, 1], "unit": "coefficient", "description": "Coefficient of variation of lead times"},
+    "DemandVariability": {"type": "continuous", "domain": [0, 1], "unit": "coefficient", "description": "Coefficient of variation of demand"},
+    "SafetyStock": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Safety stock level relative to demand"},
+    "DisruptionProbability": {"type": "continuous", "domain": [0, 1], "unit": "probability", "description": "Probability of significant supply disruption"},
+    "RecoveryTime": {"type": "continuous", "domain": [0, 365], "unit": "days", "description": "Expected time to recover from disruption"},
+    "SupplyChainResilience": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Overall resilience to supply chain shocks"},
+    "ServiceLevel": {"type": "continuous", "domain": [0, 1], "unit": "%", "description": "Order fulfillment rate"}
+  },
+  "edges": [
+    {"source": "SupplierConcentration", "target": "DisruptionProbability", "type": "causes", "strength": 0.75},
+    {"source": "GeographicSpread", "target": "DisruptionProbability", "type": "inhibits", "strength": 0.50},
+    {"source": "LeadTimeVariability", "target": "DisruptionProbability", "type": "causes", "strength": 0.45},
+    {"source": "DisruptionProbability", "target": "SupplyChainResilience", "type": "inhibits", "strength": 0.80},
+    {"source": "SafetyStock", "target": "SupplyChainResilience", "type": "causes", "strength": 0.60},
+    {"source": "SafetyStock", "target": "RecoveryTime", "type": "inhibits", "strength": 0.45},
+    {"source": "GeographicSpread", "target": "RecoveryTime", "type": "inhibits", "strength": 0.35},
+    {"source": "RecoveryTime", "target": "SupplyChainResilience", "type": "inhibits", "strength": 0.55},
+    {"source": "DemandVariability", "target": "ServiceLevel", "type": "inhibits", "strength": 0.50},
+    {"source": "SupplyChainResilience", "target": "ServiceLevel", "type": "causes", "strength": 0.75}
+  ],
+  "structural_equations": {
+    "DisruptionProbability": "0.10 + 0.40*SupplierConcentration - 0.20*GeographicSpread + 0.15*LeadTimeVariability",
+    "RecoveryTime": "30 + 200*DisruptionProbability - 50*SafetyStock - 30*GeographicSpread",
+    "SupplyChainResilience": "0.7 - 0.35*DisruptionProbability + 0.25*SafetyStock - 0.10*(RecoveryTime/365)",
+    "ServiceLevel": "0.5 + 0.40*SupplyChainResilience - 0.20*DemandVariability"
+  },
+  "assumptions": ["Disruptions are independent events", "Recovery follows exponential distribution", "Single-tier supply chain model"],
+  "metadata": {
+    "author": "GetCognition (adapted from Chopra & Sodhi, 2004)",
+    "citation": "Chopra, S. & Sodhi, M.S. (2004). Managing Risk to Avoid Supply-Chain Breakdown. MIT Sloan Management Review.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["supply-chain", "risk", "disruption", "resilience", "inventory", "logistics"]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "wacc_optimization",
+    "name": "WACC Optimization",
+    "version": "1.0.0",
+    "domain": "finance",
+    "description": "Models the causal drivers of the Weighted Average Cost of Capital (WACC), balancing cost of equity and debt."
+  },
+  "variables": {
+    "CostOfEquity": { "type": "continuous", "domain": [0, 0.3], "unit": "rate" },
+    "CostOfDebt": { "type": "continuous", "domain": [0, 0.2], "unit": "rate" },
+    "TaxRate": { "type": "continuous", "domain": [0, 0.5], "unit": "rate" },
+    "EquityWeight": { "type": "continuous", "domain": [0, 1], "unit": "weight" },
+    "DebtWeight": { "type": "continuous", "domain": [0, 1], "unit": "weight" },
+    "MarketBeta": { "type": "continuous", "domain": [0, 3], "unit": "beta" },
+    "WACC": { "type": "continuous", "domain": [0, 0.3], "unit": "rate" }
+  },
+  "edges": [
+    {"source": "MarketBeta", "target": "CostOfEquity", "type": "causes", "strength": 0.90, "description": "Higher beta increases required equity return (CAPM)"},
+    {"source": "CostOfEquity", "target": "WACC", "type": "causes", "strength": 0.70},
+    {"source": "CostOfDebt", "target": "WACC", "type": "causes", "strength": 0.30},
+    {"source": "TaxRate", "target": "CostOfDebt", "type": "inhibits", "strength": 0.40, "description": "Tax shield reduces effective cost of debt"},
+    {"source": "EquityWeight", "target": "WACC", "type": "causes", "strength": 0.80},
+    {"source": "DebtWeight", "target": "EquityWeight", "type": "inhibits", "strength": 1.0}
+  ],
+  "structural_equations": {
+    "EquityWeight": "1.0 - DebtWeight",
+    "CostOfEquity": "0.04 + 0.06*MarketBeta",
+    "WACC": "(CostOfEquity * EquityWeight) + (CostOfDebt * (1 - TaxRate) * DebtWeight)"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["finance", "wacc", "capital-structure", "risk"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

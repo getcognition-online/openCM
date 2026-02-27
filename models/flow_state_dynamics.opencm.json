@@ -1,0 +1,36 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "flow_state_dynamics",
+    "name": "Flow State Dynamics",
+    "version": "1.0.0",
+    "domain": "psychology",
+    "description": "Csikszentmihalyi's model of human experience, balancing challenge level vs skill level to reach Flow."
+  },
+  "variables": {
+    "ChallengeLevel": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "SkillLevel": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "Anxiety": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "Boredom": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "FlowProbability": { "type": "continuous", "domain": [0, 1], "unit": "prob" },
+    "ProductivityBurst": { "type": "continuous", "domain": [0, 5], "unit": "multiplier" }
+  },
+  "edges": [
+    {"source": "ChallengeLevel", "target": "Anxiety", "type": "causes", "strength": 0.85},
+    {"source": "SkillLevel", "target": "Anxiety", "type": "inhibits", "strength": 0.70},
+    {"source": "SkillLevel", "target": "Boredom", "type": "causes", "strength": 0.80},
+    {"source": "ChallengeLevel", "target": "Boredom", "type": "inhibits", "strength": 0.75},
+    {"source": "FlowProbability", "target": "ProductivityBurst", "type": "causes", "strength": 1.0}
+  ],
+  "structural_equations": {
+    "Anxiety": "max(0, ChallengeLevel - SkillLevel)",
+    "Boredom": "max(0, SkillLevel - ChallengeLevel)",
+    "FlowProbability": "1.0 - (Anxiety + Boredom)",
+    "ProductivityBurst": "1.0 + 4.0*FlowProbability"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Mihaly Csikszentmihalyi, 1990)",
+    "tags": ["psychology", "flow", "performance", "creativity"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

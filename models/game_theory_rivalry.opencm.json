@@ -1,0 +1,32 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "game_theory_rivalry",
+    "name": "Game Theory: Tit-for-Tat Rivalry",
+    "version": "1.0.0",
+    "domain": "strategy",
+    "description": "Models the causal dynamics of cooperative vs competitive behavior in a repeated game scenario between two rivals."
+  },
+  "variables": {
+    "RivalCooperation": { "type": "continuous", "domain": [0, 1], "unit": "prob", "description": "Probability that the rival chooses to cooperate" },
+    "SelfCooperation": { "type": "continuous", "domain": [0, 1], "unit": "prob", "description": "Probability that we choose to cooperate" },
+    "MarketStability": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "IndividualPayoff": { "type": "continuous", "domain": [0, 1], "unit": "utility" },
+    "TrustLevel": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "RivalCooperation", "target": "SelfCooperation", "type": "causes", "strength": 0.90, "description": "Tit-for-Tat: we mirror their previous move"},
+    {"source": "SelfCooperation", "target": "MarketStability", "type": "causes", "strength": 0.60},
+    {"source": "RivalCooperation", "target": "MarketStability", "type": "causes", "strength": 0.60},
+    {"source": "MarketStability", "target": "IndividualPayoff", "type": "causes", "strength": 0.70, "description": "Avoids price wars"}
+  ],
+  "structural_equations": {
+    "MarketStability": "0.1 + 0.4*SelfCooperation + 0.4*RivalCooperation",
+    "TrustLevel": "0.5*SelfCooperation + 0.5*RivalCooperation"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["game-theory", "competition", "cooperation", "payoff"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

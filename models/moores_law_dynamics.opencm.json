@@ -1,0 +1,30 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "moores_law_dynamics",
+    "name": "Moore's Law (Compute Economics)",
+    "version": "1.0.0",
+    "domain": "technology",
+    "description": "Gordon Moore's observation that the number of transistors on a microchip doubles every two years, driving down compute costs."
+  },
+  "variables": {
+    "YearOffset": { "type": "continuous", "domain": [0, 50], "unit": "years", "description": "Years since baseline" },
+    "TransistorDensity": { "type": "continuous", "domain": [0, 1e12], "unit": "count" },
+    "ComputeCost": { "type": "continuous", "domain": [0, 1000], "unit": "currency/flop" },
+    "AIModelCapability": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "YearOffset", "target": "TransistorDensity", "type": "causes", "strength": 1.0},
+    {"source": "TransistorDensity", "target": "ComputeCost", "type": "inhibits", "strength": 0.95},
+    {"source": "ComputeCost", "target": "AIModelCapability", "type": "inhibits", "strength": 0.80, "description": "Lower costs enable training larger models"}
+  ],
+  "structural_equations": {
+    "TransistorDensity": "pow(2, YearOffset / 2.0)",
+    "ComputeCost": "1000 / TransistorDensity"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Gordon Moore, 1965)",
+    "tags": ["technology", "compute", "scaling", "economics"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

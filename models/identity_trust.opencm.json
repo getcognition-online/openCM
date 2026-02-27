@@ -1,0 +1,32 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "identity_trust_model",
+    "name": "Pioneer Identity Trust",
+    "version": "1.0.0",
+    "domain": "verification",
+    "description": "Calculates the confidence level of an ID verification based on image fidelity, document integrity, and source trust."
+  },
+  "variables": {
+    "ImageResolution": { "type": "continuous", "domain": [0, 4000], "unit": "pixels", "description": "Width/Height resolution metrics." },
+    "GlareIndex": { "type": "continuous", "domain": [0, 1], "unit": "index", "description": "Presence of blocking reflections (0=none, 1=max)." },
+    "TextLegibility": { "type": "continuous", "domain": [0, 1], "unit": "index", "description": "Contrast-to-noise ratio in critical ID areas." },
+    "DocumentMatching": { "type": "continuous", "domain": [0, 1], "unit": "index", "description": "Correlation with known ID templates." },
+    "VerificationConfidence": { "type": "continuous", "domain": [0, 1], "unit": "prob" }
+  },
+  "edges": [
+    {"source": "ImageResolution", "target": "TextLegibility", "type": "causes", "strength": 0.85},
+    {"source": "GlareIndex", "target": "TextLegibility", "type": "inhibits", "strength": 0.95},
+    {"source": "TextLegibility", "target": "VerificationConfidence", "type": "causes", "strength": 0.90},
+    {"source": "DocumentMatching", "target": "VerificationConfidence", "type": "causes", "strength": 0.85}
+  ],
+  "structural_equations": {
+    "TextLegibility": "min(1.0, (ImageResolution / 2000.0) * (1.0 - GlareIndex))",
+    "VerificationConfidence": "0.7 * TextLegibility + 0.3 * DocumentMatching"
+  },
+  "metadata": {
+    "author": "The Librarian",
+    "tags": ["identity", "security", "verification"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

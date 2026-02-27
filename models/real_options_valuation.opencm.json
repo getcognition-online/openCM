@@ -1,0 +1,33 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "real_options_valuation",
+    "name": "Real Options Valuation",
+    "version": "1.0.0",
+    "domain": "finance",
+    "description": "Strategic flexibility framework for valuing the right (but not the obligation) to expand, defer, or abandon projects."
+  },
+  "variables": {
+    "UnderlyingValue": { "type": "continuous", "domain": [0, 1000], "unit": "currency" },
+    "Volatility": { "type": "continuous", "domain": [0, 2], "unit": "sigma" },
+    "TimeToExpiry": { "type": "continuous", "domain": [0, 10], "unit": "years" },
+    "FlexibilityValue": { "type": "continuous", "domain": [0, 500], "unit": "currency" },
+    "StrategicNPV": { "type": "continuous", "domain": [-500, 1500], "unit": "currency" },
+    "StaticNPV": { "type": "continuous", "domain": [-500, 1000], "unit": "currency" }
+  },
+  "edges": [
+    {"source": "StaticNPV", "target": "StrategicNPV", "type": "causes", "strength": 1.0},
+    {"source": "FlexibilityValue", "target": "StrategicNPV", "type": "causes", "strength": 1.0},
+    {"source": "Volatility", "target": "FlexibilityValue", "type": "causes", "strength": 0.85, "description": "Higher uncertainty increases the value of waiting/flexibility"},
+    {"source": "TimeToExpiry", "target": "FlexibilityValue", "type": "causes", "strength": 0.60, "description": "More time to decide increases option value"}
+  ],
+  "structural_equations": {
+    "StrategicNPV": "StaticNPV + FlexibilityValue",
+    "FlexibilityValue": "0.1*Volatility*UnderlyingValue * sqrt(TimeToExpiry)"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["finance", "npv", "options", "valuation", "flexibility"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

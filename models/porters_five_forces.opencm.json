@@ -1,0 +1,81 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "porters_five_forces",
+    "name": "Porter's Five Forces",
+    "version": "1.0.0",
+    "domain": "strategy",
+    "description": "Michael Porter's framework for analyzing competitive intensity and industry attractiveness through five structural forces."
+  },
+  "variables": {
+    "SupplierPower": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Bargaining power of suppliers (concentration, switching costs, differentiation)"
+    },
+    "BuyerPower": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Bargaining power of buyers (volume, alternatives, price sensitivity)"
+    },
+    "ThreatOfSubstitutes": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Threat of substitute products or services"
+    },
+    "ThreatOfNewEntrants": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Threat of new market entrants (barriers to entry, capital requirements)"
+    },
+    "CompetitiveRivalry": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Intensity of competitive rivalry among existing firms"
+    },
+    "IndustryProfitability": {
+      "type": "continuous", "domain": [0, 1], "unit": "margin",
+      "description": "Overall industry profit potential"
+    },
+    "MarketShare": {
+      "type": "continuous", "domain": [0, 1], "unit": "%",
+      "description": "Firm's share of the addressable market"
+    },
+    "PricingPower": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Ability to set and maintain favorable prices"
+    }
+  },
+  "edges": [
+    {"source": "SupplierPower", "target": "IndustryProfitability", "type": "inhibits", "strength": 0.65, "description": "High supplier power compresses margins"},
+    {"source": "BuyerPower", "target": "IndustryProfitability", "type": "inhibits", "strength": 0.70, "description": "Powerful buyers force price concessions"},
+    {"source": "BuyerPower", "target": "PricingPower", "type": "inhibits", "strength": 0.75, "description": "Buyer leverage reduces pricing flexibility"},
+    {"source": "ThreatOfSubstitutes", "target": "PricingPower", "type": "inhibits", "strength": 0.60, "description": "Substitutes cap pricing ceiling"},
+    {"source": "ThreatOfSubstitutes", "target": "MarketShare", "type": "inhibits", "strength": 0.50, "description": "Substitutes erode addressable market"},
+    {"source": "ThreatOfNewEntrants", "target": "CompetitiveRivalry", "type": "causes", "strength": 0.55, "description": "New entrants intensify competition"},
+    {"source": "ThreatOfNewEntrants", "target": "MarketShare", "type": "inhibits", "strength": 0.45, "description": "New entrants fragment market share"},
+    {"source": "CompetitiveRivalry", "target": "IndustryProfitability", "type": "inhibits", "strength": 0.80, "description": "Intense rivalry drives down margins"},
+    {"source": "CompetitiveRivalry", "target": "PricingPower", "type": "inhibits", "strength": 0.70, "description": "Competition limits pricing freedom"},
+    {"source": "PricingPower", "target": "IndustryProfitability", "type": "causes", "strength": 0.75, "description": "Pricing power directly drives margins"},
+    {"source": "MarketShare", "target": "IndustryProfitability", "type": "causes", "strength": 0.60, "description": "Higher share enables economies of scale"}
+  ],
+  "structural_equations": {
+    "IndustryProfitability": "0.7 - 0.15*SupplierPower - 0.20*BuyerPower - 0.25*CompetitiveRivalry + 0.20*PricingPower + 0.15*MarketShare",
+    "PricingPower": "0.8 - 0.25*BuyerPower - 0.20*ThreatOfSubstitutes - 0.20*CompetitiveRivalry",
+    "CompetitiveRivalry": "0.3 + 0.30*ThreatOfNewEntrants",
+    "MarketShare": "0.5 - 0.15*ThreatOfSubstitutes - 0.10*ThreatOfNewEntrants"
+  },
+  "assumptions": [
+    "Static equilibrium analysis — does not model dynamic competitive responses",
+    "Forces are assumed to be independent at the input level",
+    "Industry boundaries are clearly defined",
+    "Information is roughly symmetric among competitors"
+  ],
+  "validation": {
+    "min_data_points": 10,
+    "required_variables": ["CompetitiveRivalry", "IndustryProfitability"]
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Michael E. Porter, 1979)",
+    "citation": "Porter, M.E. (1979). How Competitive Forces Shape Strategy. Harvard Business Review.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["competition", "industry-analysis", "profitability", "barriers", "strategy"],
+    "source_url": "https://hbr.org/1979/03/how-competitive-forces-shape-strategy",
+    "adaptation_notes": "Quantified qualitative framework with continuous 0-1 indices and linear structural equations."
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "nudge_theory",
+    "name": "Nudge Theory (Choice Architecture)",
+    "version": "1.0.0",
+    "domain": "psychology",
+    "description": "Thaler and Sunstein's concept of using choice architecture to influence behavior without restricting choices."
+  },
+  "variables": {
+    "DefaultOptionSaliency": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "SocialProofIncentive": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "CognitiveEase": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "TargetBehaviorAdoption": { "type": "continuous", "domain": [0, 1], "unit": "prob" },
+    "ChoiceFreedom": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "DefaultOptionSaliency", "target": "TargetBehaviorAdoption", "type": "causes", "strength": 0.85},
+    {"source": "SocialProofIncentive", "target": "TargetBehaviorAdoption", "type": "causes", "strength": 0.60},
+    {"source": "CognitiveEase", "target": "TargetBehaviorAdoption", "type": "causes", "strength": 0.70},
+    {"source": "DefaultOptionSaliency", "target": "ChoiceFreedom", "type": "inhibits", "strength": 0.05, "description": "Nudges preserve freedom by definition"}
+  ],
+  "structural_equations": {
+    "TargetBehaviorAdoption": "0.1 + 0.5*DefaultOptionSaliency + 0.25*SocialProofIncentive + 0.15*CognitiveEase",
+    "ChoiceFreedom": "1.0 - 0.05*DefaultOptionSaliency"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Thaler & Sunstein, 2008)",
+    "tags": ["psychology", "behavioral-economics", "nudge", "choice"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

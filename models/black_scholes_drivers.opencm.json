@@ -1,0 +1,32 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "black_scholes_drivers",
+    "name": "Black-Scholes Causal Chain",
+    "version": "1.0.0",
+    "domain": "finance",
+    "description": "Models the causal impact of underlying asset price, strike price, volatility, and time to expiry on option pricing."
+  },
+  "variables": {
+    "StockPrice": { "type": "continuous", "domain": [0, 1000], "unit": "currency" },
+    "StrikePrice": { "type": "continuous", "domain": [0, 1000], "unit": "currency" },
+    "Volatility": { "type": "continuous", "domain": [0, 1.5], "unit": "sigma" },
+    "Time": { "type": "continuous", "domain": [0, 2], "unit": "years" },
+    "RiskFreeRate": { "type": "continuous", "domain": [0, 0.1], "unit": "rate" },
+    "OptionValue": { "type": "continuous", "domain": [0, 500], "unit": "currency" }
+  },
+  "edges": [
+    {"source": "StockPrice", "target": "OptionValue", "type": "causes", "strength": 0.95},
+    {"source": "StrikePrice", "target": "OptionValue", "type": "inhibits", "strength": 0.95, "description": "Higher strike reduces call value"},
+    {"source": "Volatility", "target": "OptionValue", "type": "causes", "strength": 0.80},
+    {"source": "Time", "target": "OptionValue", "type": "causes", "strength": 0.70}
+  ],
+  "structural_equations": {
+    "OptionValue": "max(0, StockPrice - StrikePrice * exp(-RiskFreeRate * Time)) + 0.4 * Volatility * StockPrice * sqrt(Time)"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["finance", "options", "black-scholes", "risk", "valuation"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "customer_acquisition_funnel",
+    "name": "Customer Acquisition Funnel",
+    "version": "1.0.0",
+    "domain": "marketing",
+    "description": "AIDA-derived causal funnel model — how awareness flows through interest, desire, and action to drive conversion and retention."
+  },
+  "variables": {
+    "AdSpend": {"type": "continuous", "domain": [0, 1000000], "unit": "$", "description": "Total advertising and marketing expenditure"},
+    "Awareness": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "Brand/product awareness in target market"},
+    "Interest": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "Prospects actively considering the product"},
+    "Desire": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "Prospects with intent to purchase"},
+    "Action": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "Actual purchase/conversion rate"},
+    "CustomerRetention": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "Post-purchase repeat rate"},
+    "CAC": {"type": "continuous", "domain": [0, 10000], "unit": "$", "description": "Customer acquisition cost"},
+    "LTV": {"type": "continuous", "domain": [0, 100000], "unit": "$", "description": "Customer lifetime value"}
+  },
+  "edges": [
+    {"source": "AdSpend", "target": "Awareness", "type": "causes", "strength": 0.70},
+    {"source": "Awareness", "target": "Interest", "type": "causes", "strength": 0.50},
+    {"source": "Interest", "target": "Desire", "type": "causes", "strength": 0.55},
+    {"source": "Desire", "target": "Action", "type": "causes", "strength": 0.60},
+    {"source": "Action", "target": "CustomerRetention", "type": "causes", "strength": 0.40},
+    {"source": "AdSpend", "target": "CAC", "type": "causes", "strength": 0.80},
+    {"source": "Action", "target": "CAC", "type": "inhibits", "strength": 0.65, "description": "Higher conversion lowers per-customer cost"},
+    {"source": "CustomerRetention", "target": "LTV", "type": "causes", "strength": 0.85}
+  ],
+  "structural_equations": {
+    "Awareness": "0.05 + 0.60 * (AdSpend / 1000000)",
+    "Interest": "0.10 + 0.45*Awareness",
+    "Desire": "0.05 + 0.50*Interest",
+    "Action": "0.02 + 0.55*Desire",
+    "CAC": "AdSpend / (Action * 10000 + 1)",
+    "LTV": "500 + 8000*CustomerRetention"
+  },
+  "assumptions": ["Funnel stages are sequential", "No leapfrogging stages", "AdSpend has diminishing returns at scale"],
+  "metadata": {
+    "author": "GetCognition (adapted from AIDA model, St. Elmo Lewis, 1898)",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["funnel", "acquisition", "conversion", "retention", "cac", "ltv"]
+  }
+}

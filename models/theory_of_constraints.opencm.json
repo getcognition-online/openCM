@@ -1,0 +1,43 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "theory_of_constraints",
+    "name": "Theory of Constraints",
+    "version": "1.0.0",
+    "domain": "operations",
+    "description": "Goldratt's Theory of Constraints — how system bottlenecks causally limit throughput and how focused improvement drives performance."
+  },
+  "variables": {
+    "BottleneckCapacity": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Capacity of the system constraint/bottleneck"},
+    "NonBottleneckCapacity": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Capacity of non-constraint resources"},
+    "BufferManagement": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Effectiveness of buffers protecting the constraint"},
+    "Throughput": {"type": "continuous", "domain": [0, 1], "unit": "units/hr", "description": "System output rate (revenue minus truly variable costs)"},
+    "Inventory": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Money invested in things intended to sell"},
+    "OperatingExpense": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Money spent turning inventory into throughput"},
+    "NetProfit": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Throughput minus operating expense"},
+    "FocusedImprovement": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Concentrated improvement effort on the constraint"}
+  },
+  "edges": [
+    {"source": "BottleneckCapacity", "target": "Throughput", "type": "causes", "strength": 0.90, "description": "The constraint determines throughput (Drum)"},
+    {"source": "NonBottleneckCapacity", "target": "Throughput", "type": "causes", "strength": 0.15, "description": "Non-constraints barely affect throughput"},
+    {"source": "BufferManagement", "target": "Throughput", "type": "causes", "strength": 0.40, "description": "Buffers protect constraint from starvation"},
+    {"source": "FocusedImprovement", "target": "BottleneckCapacity", "type": "causes", "strength": 0.70, "description": "Focus improvement on constraint (Elevate)"},
+    {"source": "Throughput", "target": "NetProfit", "type": "causes", "strength": 0.85},
+    {"source": "OperatingExpense", "target": "NetProfit", "type": "inhibits", "strength": 0.75},
+    {"source": "Inventory", "target": "OperatingExpense", "type": "causes", "strength": 0.40, "description": "Excess inventory carries cost"},
+    {"source": "NonBottleneckCapacity", "target": "Inventory", "type": "causes", "strength": 0.50, "description": "Non-constraints produce excess WIP"}
+  ],
+  "structural_equations": {
+    "Throughput": "0.05 + 0.80*BottleneckCapacity + 0.05*NonBottleneckCapacity + 0.15*BufferManagement",
+    "BottleneckCapacity": "0.3 + 0.50*FocusedImprovement",
+    "NetProfit": "Throughput - OperatingExpense",
+    "Inventory": "0.2 + 0.40*NonBottleneckCapacity - 0.20*BottleneckCapacity"
+  },
+  "assumptions": ["There is always at least one constraint", "Local optima do not equal global optimum", "Constraint determines system throughput"],
+  "metadata": {
+    "author": "GetCognition (adapted from Eliyahu M. Goldratt, 1984)",
+    "citation": "Goldratt, E.M. (1984). The Goal. North River Press.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["toc", "bottleneck", "throughput", "drum-buffer-rope", "continuous-improvement"]
+  }
+}

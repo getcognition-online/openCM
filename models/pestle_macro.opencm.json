@@ -1,0 +1,46 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "pestle_macro",
+    "name": "PESTLE Macro Analysis",
+    "version": "1.0.0",
+    "domain": "strategy",
+    "description": "Causal model of the six PESTLE macro-environmental forces (Political, Economic, Social, Technological, Legal, Environmental) driving business environment dynamics."
+  },
+  "variables": {
+    "PoliticalStability": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Government stability, policy predictability, trade relations"},
+    "EconomicConditions": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "GDP growth, inflation, interest rates, employment"},
+    "SocialTrends": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Demographics, cultural shifts, consumer attitudes"},
+    "TechnologicalChange": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Innovation rate, R&D investment, digital transformation"},
+    "LegalFramework": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Regulatory burden, compliance requirements, IP protection"},
+    "EnvironmentalPressure": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Climate policy, sustainability mandates, resource scarcity"},
+    "MarketAttractiveness": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Overall market desirability for business operations"},
+    "OperationalRisk": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Risk to ongoing business operations"},
+    "InnovationOpportunity": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Opportunity space for disruptive value creation"}
+  },
+  "edges": [
+    {"source": "PoliticalStability", "target": "MarketAttractiveness", "type": "causes", "strength": 0.60},
+    {"source": "PoliticalStability", "target": "OperationalRisk", "type": "inhibits", "strength": 0.55},
+    {"source": "EconomicConditions", "target": "MarketAttractiveness", "type": "causes", "strength": 0.75},
+    {"source": "SocialTrends", "target": "MarketAttractiveness", "type": "causes", "strength": 0.45},
+    {"source": "SocialTrends", "target": "InnovationOpportunity", "type": "causes", "strength": 0.40},
+    {"source": "TechnologicalChange", "target": "InnovationOpportunity", "type": "causes", "strength": 0.80},
+    {"source": "TechnologicalChange", "target": "OperationalRisk", "type": "causes", "strength": 0.35, "description": "Tech disruption creates operational risk"},
+    {"source": "LegalFramework", "target": "OperationalRisk", "type": "causes", "strength": 0.50},
+    {"source": "LegalFramework", "target": "MarketAttractiveness", "type": "inhibits", "strength": 0.30},
+    {"source": "EnvironmentalPressure", "target": "OperationalRisk", "type": "causes", "strength": 0.45},
+    {"source": "EnvironmentalPressure", "target": "InnovationOpportunity", "type": "causes", "strength": 0.50, "description": "Climate pressure creates greentech opportunities"}
+  ],
+  "structural_equations": {
+    "MarketAttractiveness": "0.4 + 0.20*PoliticalStability + 0.30*EconomicConditions + 0.15*SocialTrends - 0.10*LegalFramework",
+    "OperationalRisk": "0.2 - 0.15*PoliticalStability + 0.10*TechnologicalChange + 0.20*LegalFramework + 0.15*EnvironmentalPressure",
+    "InnovationOpportunity": "0.2 + 0.15*SocialTrends + 0.35*TechnologicalChange + 0.20*EnvironmentalPressure"
+  },
+  "assumptions": ["Macro factors are exogenous to individual firm actions", "Linear relationships at moderate variable ranges", "Factors interact additively in this version"],
+  "metadata": {
+    "author": "GetCognition (adapted from Francis Aguilar, 1967)",
+    "citation": "Aguilar, F.J. (1967). Scanning the Business Environment. Macmillan.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["macro", "environment", "political", "economic", "technology", "regulatory"]
+  }
+}

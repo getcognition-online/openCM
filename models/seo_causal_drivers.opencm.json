@@ -1,0 +1,34 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "seo_causal_drivers",
+    "name": "SEO Success Drivers",
+    "version": "1.0.0",
+    "domain": "marketing",
+    "description": "Causal model of search engine optimization drivers including content, authority, and technical factors."
+  },
+  "variables": {
+    "ContentRelevance": { "type": "continuous", "domain": [0, 1], "unit": "score" },
+    "DomainAuthority": { "type": "continuous", "domain": [0, 100], "unit": "da" },
+    "TechnicalHealth": { "type": "continuous", "domain": [0, 1], "unit": "score" },
+    "BacklinkVelocity": { "type": "continuous", "domain": [0, 1], "unit": "rate" },
+    "OrganicTraffic": { "type": "continuous", "domain": [0, 1000000], "unit": "sessions" },
+    "ConversionRate": { "type": "continuous", "domain": [0, 0.2], "unit": "rate" }
+  },
+  "edges": [
+    {"source": "ContentRelevance", "target": "OrganicTraffic", "type": "causes", "strength": 0.80},
+    {"source": "DomainAuthority", "target": "OrganicTraffic", "type": "causes", "strength": 0.90},
+    {"source": "TechnicalHealth", "target": "OrganicTraffic", "type": "causes", "strength": 0.60},
+    {"source": "BacklinkVelocity", "target": "DomainAuthority", "type": "causes", "strength": 0.75},
+    {"source": "OrganicTraffic", "target": "ConversionRate", "type": "inhibits", "strength": 0.15, "description": "Traffic volume often dilutes conversion rate slightly"}
+  ],
+  "structural_equations": {
+    "DomainAuthority": "10 + 60*BacklinkVelocity + 0.1*ContentRelevance",
+    "OrganicTraffic": "1000 * (5*DomainAuthority + 400*ContentRelevance + 100*TechnicalHealth)"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["marketing", "seo", "traffic", "search", "content"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

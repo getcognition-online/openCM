@@ -1,0 +1,30 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "metcalfes_law",
+    "name": "Metcalfe's Law (Network Value)",
+    "version": "1.0.0",
+    "domain": "technology",
+    "description": "The value of a network is proportional to the square of the number of connected users (n^2)."
+  },
+  "variables": {
+    "UserBaseSize": { "type": "continuous", "domain": [0, 1000000], "unit": "users" },
+    "ConnectionDensity": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "NetworkUtility": { "type": "continuous", "domain": [0, 1e12], "unit": "index" },
+    "BusinessEnterpriseValue": { "type": "continuous", "domain": [0, 1e12], "unit": "currency" }
+  },
+  "edges": [
+    {"source": "UserBaseSize", "target": "NetworkUtility", "type": "causes", "strength": 1.0, "description": "Utility grows quadratically with users"},
+    {"source": "ConnectionDensity", "target": "NetworkUtility", "type": "causes", "strength": 0.60},
+    {"source": "NetworkUtility", "target": "BusinessEnterpriseValue", "type": "causes", "strength": 0.90}
+  ],
+  "structural_equations": {
+    "NetworkUtility": "pow(UserBaseSize, 2) * ConnectionDensity",
+    "BusinessEnterpriseValue": "0.1 * NetworkUtility"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Robert Metcalfe)",
+    "tags": ["technology", "network-effects", "scaling", "value"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

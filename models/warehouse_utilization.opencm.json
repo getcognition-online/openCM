@@ -1,0 +1,31 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "warehouse_utilization",
+    "name": "Warehouse Utilization",
+    "version": "1.0.0",
+    "domain": "operations",
+    "description": "Causal drivers of warehouse efficiency, linking storage density, picking speed, and turnover rates."
+  },
+  "variables": {
+    "StorageDensity": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "PickingEfficiency": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "InventoryTurnover": { "type": "continuous", "domain": [0, 50], "unit": "multiplier" },
+    "FulfillmentLeadTime": { "type": "continuous", "domain": [0, 48], "unit": "hours" },
+    "OperationalCost": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "StorageDensity", "target": "PickingEfficiency", "type": "inhibits", "strength": 0.30, "description": "Too much density can slow down picking"},
+    {"source": "PickingEfficiency", "target": "FulfillmentLeadTime", "type": "inhibits", "strength": 0.85},
+    {"source": "InventoryTurnover", "target": "OperationalCost", "type": "inhibits", "strength": 0.60},
+    {"source": "FulfillmentLeadTime", "target": "OperationalCost", "type": "causes", "strength": 0.70}
+  ],
+  "structural_equations": {
+    "OperationalCost": "0.2 + 0.6*(FulfillmentLeadTime/48.0) - 0.2*(InventoryTurnover/50.0)"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["operations", "logistics", "warehouse", "efficiency"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

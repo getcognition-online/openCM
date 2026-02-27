@@ -1,0 +1,45 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "marketing_mix_4p",
+    "name": "Marketing Mix (4P)",
+    "version": "1.0.0",
+    "domain": "marketing",
+    "description": "McCarthy's 4P framework — how Product, Price, Place, and Promotion interact causally to drive market performance."
+  },
+  "variables": {
+    "ProductQuality": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Product features, design, reliability, innovation"},
+    "Price": {"type": "continuous", "domain": [0, 500], "unit": "$", "description": "Market price point"},
+    "PlaceDistribution": {"type": "continuous", "domain": [0, 1], "unit": "coverage", "description": "Distribution channel reach and availability"},
+    "PromotionIntensity": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Advertising, PR, sales promotion, personal selling"},
+    "BrandPerception": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Consumer brand awareness and sentiment"},
+    "CustomerDemand": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Market demand for the product"},
+    "Revenue": {"type": "continuous", "domain": [0, 10000000], "unit": "$", "description": "Total revenue"},
+    "MarketShare": {"type": "continuous", "domain": [0, 1], "unit": "%", "description": "Share of addressable market"}
+  },
+  "edges": [
+    {"source": "ProductQuality", "target": "BrandPerception", "type": "causes", "strength": 0.70},
+    {"source": "ProductQuality", "target": "CustomerDemand", "type": "causes", "strength": 0.55},
+    {"source": "Price", "target": "CustomerDemand", "type": "inhibits", "strength": 0.60, "description": "Higher price reduces demand (law of demand)"},
+    {"source": "Price", "target": "Revenue", "type": "causes", "strength": 0.50, "description": "Higher price increases revenue per unit"},
+    {"source": "PlaceDistribution", "target": "CustomerDemand", "type": "causes", "strength": 0.50},
+    {"source": "PromotionIntensity", "target": "BrandPerception", "type": "causes", "strength": 0.65},
+    {"source": "PromotionIntensity", "target": "CustomerDemand", "type": "causes", "strength": 0.45},
+    {"source": "BrandPerception", "target": "CustomerDemand", "type": "causes", "strength": 0.55},
+    {"source": "CustomerDemand", "target": "Revenue", "type": "causes", "strength": 0.80},
+    {"source": "CustomerDemand", "target": "MarketShare", "type": "causes", "strength": 0.70}
+  ],
+  "structural_equations": {
+    "BrandPerception": "0.2 + 0.35*ProductQuality + 0.30*PromotionIntensity",
+    "CustomerDemand": "0.3 + 0.20*ProductQuality - 0.15*Price + 0.15*PlaceDistribution + 0.15*PromotionIntensity + 0.20*BrandPerception",
+    "Revenue": "CustomerDemand * Price",
+    "MarketShare": "0.1 + 0.50*CustomerDemand"
+  },
+  "assumptions": ["Price elasticity is moderate", "Promotion effects are not saturated", "Distribution and quality are independently achievable"],
+  "metadata": {
+    "author": "GetCognition (adapted from E. Jerome McCarthy, 1960)",
+    "citation": "McCarthy, E.J. (1960). Basic Marketing: A Managerial Approach. Irwin.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["marketing", "4p", "pricing", "promotion", "distribution", "demand"]
+  }
+}

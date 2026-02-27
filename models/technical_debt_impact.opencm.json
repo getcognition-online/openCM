@@ -1,0 +1,33 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "technical_debt_impact",
+    "name": "Technical Debt Impact",
+    "version": "1.0.0",
+    "domain": "technology",
+    "description": "Models the causal tradeoff between shipping speed (velocity) and long-term maintenance costs."
+  },
+  "variables": {
+    "ShippingVelocity": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "CodeQuality": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "TechnicalDebt": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "MaintenanceBurden": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "InnovationCapacity": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "ShippingVelocity", "target": "TechnicalDebt", "type": "causes", "strength": 0.80, "description": "Faster shipping often sacrifices quality"},
+    {"source": "CodeQuality", "target": "TechnicalDebt", "type": "inhibits", "strength": 0.90},
+    {"source": "TechnicalDebt", "target": "MaintenanceBurden", "type": "causes", "strength": 0.95},
+    {"source": "MaintenanceBurden", "target": "InnovationCapacity", "type": "inhibits", "strength": 0.85, "description": "Debt interest eats R&D budget"}
+  ],
+  "structural_equations": {
+    "TechnicalDebt": "max(0, ShippingVelocity - CodeQuality)",
+    "MaintenanceBurden": "0.1 + 0.9*TechnicalDebt",
+    "InnovationCapacity": "1.0 - MaintenanceBurden"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["technology", "engineering", "debt", "quality", "velocity"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

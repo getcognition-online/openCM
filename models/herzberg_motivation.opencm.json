@@ -1,0 +1,49 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "herzberg_motivation",
+    "name": "Herzberg Two-Factor Motivation",
+    "version": "1.0.0",
+    "domain": "organization",
+    "description": "Herzberg's Motivation-Hygiene Theory — how motivator factors (achievement, recognition) and hygiene factors (salary, conditions) independently drive employee satisfaction, productivity, and retention."
+  },
+  "variables": {
+    "Achievement": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Sense of accomplishment and meaningful work"},
+    "Recognition": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Acknowledgment and appreciation of contributions"},
+    "WorkItself": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Intrinsic interest and challenge of the work"},
+    "GrowthOpportunity": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Advancement and learning opportunities"},
+    "Salary": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Compensation adequacy"},
+    "WorkConditions": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Physical and environmental work conditions"},
+    "JobSecurity": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Employment stability and predictability"},
+    "Motivation": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Intrinsic motivation to perform"},
+    "Dissatisfaction": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Job dissatisfaction level (absence of hygiene factors)"},
+    "Productivity": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Employee output and performance"},
+    "Retention": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "Employee retention rate"}
+  },
+  "edges": [
+    {"source": "Achievement", "target": "Motivation", "type": "causes", "strength": 0.80},
+    {"source": "Recognition", "target": "Motivation", "type": "causes", "strength": 0.65},
+    {"source": "WorkItself", "target": "Motivation", "type": "causes", "strength": 0.70},
+    {"source": "GrowthOpportunity", "target": "Motivation", "type": "causes", "strength": 0.75},
+    {"source": "Salary", "target": "Dissatisfaction", "type": "inhibits", "strength": 0.60, "description": "Adequate salary prevents dissatisfaction but doesn't motivate"},
+    {"source": "WorkConditions", "target": "Dissatisfaction", "type": "inhibits", "strength": 0.50},
+    {"source": "JobSecurity", "target": "Dissatisfaction", "type": "inhibits", "strength": 0.55},
+    {"source": "Motivation", "target": "Productivity", "type": "causes", "strength": 0.75},
+    {"source": "Dissatisfaction", "target": "Productivity", "type": "inhibits", "strength": 0.50},
+    {"source": "Motivation", "target": "Retention", "type": "causes", "strength": 0.60},
+    {"source": "Dissatisfaction", "target": "Retention", "type": "inhibits", "strength": 0.70}
+  ],
+  "structural_equations": {
+    "Motivation": "0.1 + 0.25*Achievement + 0.20*Recognition + 0.25*WorkItself + 0.20*GrowthOpportunity",
+    "Dissatisfaction": "0.8 - 0.25*Salary - 0.20*WorkConditions - 0.20*JobSecurity",
+    "Productivity": "0.3 + 0.45*Motivation - 0.20*Dissatisfaction",
+    "Retention": "0.4 + 0.30*Motivation - 0.35*Dissatisfaction"
+  },
+  "assumptions": ["Motivators and hygiene factors are independent dimensions", "Hygiene factors prevent dissatisfaction but don't create motivation", "Motivation is the primary driver of discretionary effort"],
+  "metadata": {
+    "author": "GetCognition (adapted from Frederick Herzberg, 1959)",
+    "citation": "Herzberg, F. (1959). The Motivation to Work. Wiley.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["motivation", "hygiene", "satisfaction", "productivity", "retention", "hr"]
+  }
+}

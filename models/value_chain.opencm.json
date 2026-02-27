@@ -1,0 +1,48 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "value_chain",
+    "name": "Porter's Value Chain",
+    "version": "1.0.0",
+    "domain": "strategy",
+    "description": "Causal model of Porter's Value Chain — how primary and support activities create competitive advantage and firm value."
+  },
+  "variables": {
+    "InboundLogistics": {"type": "continuous", "domain": [0, 1], "unit": "efficiency", "description": "Receiving, warehousing, inventory management"},
+    "Operations": {"type": "continuous", "domain": [0, 1], "unit": "efficiency", "description": "Manufacturing, assembly, quality control"},
+    "OutboundLogistics": {"type": "continuous", "domain": [0, 1], "unit": "efficiency", "description": "Distribution, delivery, order fulfillment"},
+    "MarketingSales": {"type": "continuous", "domain": [0, 1], "unit": "effectiveness", "description": "Advertising, promotion, channel management"},
+    "Service": {"type": "continuous", "domain": [0, 1], "unit": "quality", "description": "Post-sale support, warranty, customer success"},
+    "Infrastructure": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Finance, planning, quality management (support)"},
+    "HRM": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Recruiting, training, compensation (support)"},
+    "TechnologyDev": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "R&D, process automation, product design (support)"},
+    "Procurement": {"type": "continuous", "domain": [0, 1], "unit": "efficiency", "description": "Purchasing, vendor management (support)"},
+    "Margin": {"type": "continuous", "domain": [0, 1], "unit": "%", "description": "Value created minus cost of activities"},
+    "CompetitiveAdvantage": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Sustainable competitive advantage"}
+  },
+  "edges": [
+    {"source": "Procurement", "target": "InboundLogistics", "type": "causes", "strength": 0.60},
+    {"source": "InboundLogistics", "target": "Operations", "type": "causes", "strength": 0.70},
+    {"source": "TechnologyDev", "target": "Operations", "type": "causes", "strength": 0.55},
+    {"source": "HRM", "target": "Operations", "type": "causes", "strength": 0.45},
+    {"source": "Operations", "target": "OutboundLogistics", "type": "causes", "strength": 0.65},
+    {"source": "OutboundLogistics", "target": "MarketingSales", "type": "causes", "strength": 0.40},
+    {"source": "MarketingSales", "target": "Service", "type": "causes", "strength": 0.35},
+    {"source": "Infrastructure", "target": "Margin", "type": "causes", "strength": 0.30},
+    {"source": "Operations", "target": "Margin", "type": "causes", "strength": 0.65},
+    {"source": "MarketingSales", "target": "Margin", "type": "causes", "strength": 0.50},
+    {"source": "Service", "target": "Margin", "type": "causes", "strength": 0.40},
+    {"source": "Margin", "target": "CompetitiveAdvantage", "type": "causes", "strength": 0.80}
+  ],
+  "structural_equations": {
+    "Margin": "0.1 + 0.10*Infrastructure + 0.25*Operations + 0.20*MarketingSales + 0.15*Service",
+    "CompetitiveAdvantage": "0.2 + 0.50*Margin + 0.15*TechnologyDev + 0.10*HRM"
+  },
+  "assumptions": ["Activities are separable and measurable", "Value creation is additive across activities", "Support activities enhance primary activities"],
+  "metadata": {
+    "author": "GetCognition (adapted from Michael E. Porter, 1985)",
+    "citation": "Porter, M.E. (1985). Competitive Advantage. Free Press.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["value-chain", "operations", "competitive-advantage", "margin"]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "capm_asset_pricing",
+    "name": "CAPM Asset Pricing",
+    "version": "1.0.0",
+    "domain": "finance",
+    "description": "Capital Asset Pricing Model — causal structure linking systematic risk, market conditions, and expected returns."
+  },
+  "variables": {
+    "RiskFreeRate": {"type": "continuous", "domain": [0, 0.15], "unit": "%", "description": "Risk-free rate (Treasury yield)"},
+    "MarketReturn": {"type": "continuous", "domain": [-0.5, 0.5], "unit": "%", "description": "Expected market portfolio return"},
+    "Beta": {"type": "continuous", "domain": [0, 3], "unit": "coefficient", "description": "Systematic risk relative to market"},
+    "MarketRiskPremium": {"type": "continuous", "domain": [0, 0.3], "unit": "%", "description": "Excess return over risk-free rate"},
+    "ExpectedReturn": {"type": "continuous", "domain": [-0.5, 0.5], "unit": "%", "description": "Expected return on asset"},
+    "FirmSize": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Market capitalization relative to universe"},
+    "Leverage": {"type": "continuous", "domain": [0, 1], "unit": "ratio", "description": "Debt-to-equity ratio normalized"},
+    "Volatility": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Annualized price volatility"}
+  },
+  "edges": [
+    {"source": "MarketReturn", "target": "MarketRiskPremium", "type": "causes", "strength": 0.85},
+    {"source": "RiskFreeRate", "target": "MarketRiskPremium", "type": "inhibits", "strength": 0.80},
+    {"source": "RiskFreeRate", "target": "ExpectedReturn", "type": "causes", "strength": 0.30},
+    {"source": "Beta", "target": "ExpectedReturn", "type": "causes", "strength": 0.70},
+    {"source": "MarketRiskPremium", "target": "ExpectedReturn", "type": "causes", "strength": 0.75},
+    {"source": "Leverage", "target": "Beta", "type": "causes", "strength": 0.55},
+    {"source": "FirmSize", "target": "Beta", "type": "inhibits", "strength": 0.30, "description": "Larger firms tend to have lower beta"},
+    {"source": "Beta", "target": "Volatility", "type": "causes", "strength": 0.65}
+  ],
+  "structural_equations": {
+    "MarketRiskPremium": "MarketReturn - RiskFreeRate",
+    "ExpectedReturn": "RiskFreeRate + Beta * MarketRiskPremium",
+    "Beta": "0.8 + 0.40*Leverage - 0.20*FirmSize",
+    "Volatility": "0.1 + 0.50*Beta"
+  },
+  "assumptions": ["Markets are efficient", "Investors are rational and risk-averse", "Single-period model", "Unlimited borrowing at risk-free rate"],
+  "metadata": {
+    "author": "GetCognition (adapted from Sharpe, 1964; Lintner, 1965; Mossin, 1966)",
+    "citation": "Sharpe, W.F. (1964). Capital Asset Prices. Journal of Finance.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["capm", "risk", "return", "beta", "portfolio", "pricing"]
+  }
+}

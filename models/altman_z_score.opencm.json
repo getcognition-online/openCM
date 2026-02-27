@@ -1,0 +1,36 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "altman_z_score",
+    "name": "Altman Z-Score (Bankruptcy Risk)",
+    "version": "1.0.0",
+    "domain": "finance",
+    "description": "Edward Altman's formula for predicting the probability that a firm will go into bankruptcy within two years."
+  },
+  "variables": {
+    "WorkingCapitalTotalAssets": { "type": "continuous", "domain": [-1, 1], "unit": "ratio", "description": "Liquidity measure" },
+    "RetainedEarningsTotalAssets": { "type": "continuous", "domain": [-1, 1], "unit": "ratio", "description": "Cumulative profitability" },
+    "EBITTotalAssets": { "type": "continuous", "domain": [-0.5, 0.5], "unit": "ratio", "description": "Operating efficiency" },
+    "MarketValueEquityBookDebt": { "type": "continuous", "domain": [0, 10], "unit": "ratio", "description": "Market leverage" },
+    "SalesTotalAssets": { "type": "continuous", "domain": [0, 5], "unit": "ratio", "description": "Asset turnover" },
+    "ZScore": { "type": "continuous", "domain": [0, 10], "unit": "score" },
+    "BankruptcyRisk": { "type": "continuous", "domain": [0, 1], "unit": "prob" }
+  },
+  "edges": [
+    {"source": "WorkingCapitalTotalAssets", "target": "ZScore", "type": "causes", "strength": 0.30},
+    {"source": "RetainedEarningsTotalAssets", "target": "ZScore", "type": "causes", "strength": 0.40},
+    {"source": "EBITTotalAssets", "target": "ZScore", "type": "causes", "strength": 0.90},
+    {"source": "MarketValueEquityBookDebt", "target": "ZScore", "type": "causes", "strength": 0.20},
+    {"source": "SalesTotalAssets", "target": "ZScore", "type": "causes", "strength": 0.30},
+    {"source": "ZScore", "target": "BankruptcyRisk", "type": "inhibits", "strength": 0.95}
+  ],
+  "structural_equations": {
+    "ZScore": "1.2*WorkingCapitalTotalAssets + 1.4*RetainedEarningsTotalAssets + 3.3*EBITTotalAssets + 0.6*MarketValueEquityBookDebt + 1.0*SalesTotalAssets",
+    "BankruptcyRisk": "max(0, min(1, 1.0 - (ZScore / 3.0)))"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Edward Altman, 1968)",
+    "tags": ["finance", "risk", "bankruptcy", "valuation", "leverage"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

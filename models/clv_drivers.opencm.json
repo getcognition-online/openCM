@@ -1,0 +1,43 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "clv_drivers",
+    "name": "Customer Lifetime Value Drivers",
+    "version": "1.0.0",
+    "domain": "marketing",
+    "description": "Causal model of the factors driving customer lifetime value — how satisfaction, engagement, and service quality compound into long-term revenue."
+  },
+  "variables": {
+    "ProductSatisfaction": {"type": "continuous", "domain": [0, 1], "unit": "score", "description": "Customer satisfaction with product/service"},
+    "ServiceQuality": {"type": "continuous", "domain": [0, 1], "unit": "score", "description": "Quality of customer support and service interactions"},
+    "CustomerEngagement": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Frequency and depth of customer interaction"},
+    "SwitchingCost": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Perceived cost of switching to competitor"},
+    "RetentionRate": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "Probability of customer renewing/repurchasing"},
+    "ARPU": {"type": "continuous", "domain": [0, 10000], "unit": "$/month", "description": "Average revenue per user per month"},
+    "ReferralRate": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "Rate of customer referrals"},
+    "CLV": {"type": "continuous", "domain": [0, 100000], "unit": "$", "description": "Customer lifetime value"}
+  },
+  "edges": [
+    {"source": "ProductSatisfaction", "target": "RetentionRate", "type": "causes", "strength": 0.75},
+    {"source": "ServiceQuality", "target": "ProductSatisfaction", "type": "causes", "strength": 0.50},
+    {"source": "ServiceQuality", "target": "RetentionRate", "type": "causes", "strength": 0.45},
+    {"source": "CustomerEngagement", "target": "ARPU", "type": "causes", "strength": 0.55},
+    {"source": "CustomerEngagement", "target": "ReferralRate", "type": "causes", "strength": 0.40},
+    {"source": "SwitchingCost", "target": "RetentionRate", "type": "causes", "strength": 0.60},
+    {"source": "ProductSatisfaction", "target": "ReferralRate", "type": "causes", "strength": 0.65},
+    {"source": "RetentionRate", "target": "CLV", "type": "causes", "strength": 0.80},
+    {"source": "ARPU", "target": "CLV", "type": "causes", "strength": 0.70},
+    {"source": "ReferralRate", "target": "CLV", "type": "causes", "strength": 0.30}
+  ],
+  "structural_equations": {
+    "RetentionRate": "0.2 + 0.35*ProductSatisfaction + 0.15*ServiceQuality + 0.20*SwitchingCost",
+    "CLV": "ARPU * 12 * (RetentionRate / (1 - RetentionRate + 0.01)) + 500*ReferralRate"
+  },
+  "assumptions": ["Retention is the primary CLV driver", "Satisfaction-loyalty link is strong", "ARPU growth compounds with engagement"],
+  "metadata": {
+    "author": "GetCognition (adapted from Gupta & Lehmann, 2005)",
+    "citation": "Gupta, S. & Lehmann, D.R. (2005). Managing Customers as Investments. Wharton School Publishing.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["clv", "retention", "satisfaction", "engagement", "arpu", "referral"]
+  }
+}

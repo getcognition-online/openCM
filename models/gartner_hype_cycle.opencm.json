@@ -1,0 +1,33 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "gartner_hype_cycle",
+    "name": "Gartner Hype Cycle",
+    "version": "1.0.0",
+    "domain": "technology",
+    "description": "Models the lifecycle of technology adoption through phases: Innovation Trigger, Peak of Inflated Expectations, Trough of Disillusionment, Slope of Enlightenment, and Plateau of Productivity."
+  },
+  "variables": {
+    "InnovationMaturity": { "type": "continuous", "domain": [0, 10], "unit": "years" },
+    "MediaHype": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "TechnicalViability": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "MarketAdoption": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "InvestmentVelocity": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "InnovationMaturity", "target": "MediaHype", "type": "causes", "strength": 1.0, "description": "Early maturity drives 'Innovation Trigger'"},
+    {"source": "MediaHype", "target": "InvestmentVelocity", "type": "causes", "strength": 0.90},
+    {"source": "TechnicalViability", "target": "MarketAdoption", "type": "causes", "strength": 0.85},
+    {"source": "MediaHype", "target": "MarketAdoption", "type": "causes", "strength": 0.30, "description": "Hype drives early, often fragile adoption"}
+  ],
+  "structural_equations": {
+    "MediaHype": "sin(InnovationMaturity / 2.0) * exp(-InnovationMaturity / 5.0) + 0.1",
+    "TechnicalViability": "1.0 / (1.0 + exp(-0.5 * (InnovationMaturity - 5)))",
+    "MarketAdoption": "0.2*MediaHype + 0.8*TechnicalViability"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Gartner)",
+    "tags": ["technology", "hype", "lifecycle", "adoption"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

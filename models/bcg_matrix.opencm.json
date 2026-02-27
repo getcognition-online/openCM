@@ -1,0 +1,46 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "bcg_matrix",
+    "name": "BCG Growth-Share Matrix",
+    "version": "1.0.0",
+    "domain": "strategy",
+    "description": "Boston Consulting Group model for portfolio management focusing on relative market share and industry growth rate."
+  },
+  "variables": {
+    "RelativeMarketShare": {
+      "type": "continuous", "domain": [0, 2], "unit": "ratio",
+      "description": "Share relative to largest competitor"
+    },
+    "MarketGrowthRate": {
+      "type": "continuous", "domain": [-0.2, 0.5], "unit": "growth",
+      "description": "Annual growth rate of the target industry"
+    },
+    "CashGeneration": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Ability of the business unit to generate cash"
+    },
+    "InvestmentRequired": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Cash requirement for growth/maintenance"
+    },
+    "StrategicPriority": {
+      "type": "categorical", "categories": ["Harvest", "Hold", "Build", "Divest"],
+      "description": "Recommended strategic action"
+    }
+  },
+  "edges": [
+    {"source": "RelativeMarketShare", "target": "CashGeneration", "type": "causes", "strength": 0.80, "description": "Dominance drives cash flow (Cash Cows)"},
+    {"source": "MarketGrowthRate", "target": "InvestmentRequired", "type": "causes", "strength": 0.75, "description": "Fast-growing markets require heavy reinvestment (Stars/Question Marks)"},
+    {"source": "RelativeMarketShare", "target": "InvestmentRequired", "type": "inhibits", "strength": 0.30, "description": "High share offers economies of scale"}
+  ],
+  "structural_equations": {
+    "CashGeneration": "0.1 + 0.7*RelativeMarketShare - 0.2*MarketGrowthRate",
+    "InvestmentRequired": "0.2 + 0.6*MarketGrowthRate - 0.1*RelativeMarketShare"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from BCG, 1970)",
+    "tags": ["portfolio", "market-share", "growth", "cash-flow"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

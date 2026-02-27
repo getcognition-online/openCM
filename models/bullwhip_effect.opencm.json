@@ -1,0 +1,32 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "bullwhip_effect",
+    "name": "Bullwhip Effect (Supply Chain)",
+    "version": "1.0.0",
+    "domain": "supply_chain",
+    "description": "Information distortion in supply chains where small fluctuations in retail demand cause larger fluctuations at the wholesale, distributor, and manufacturer levels."
+  },
+  "variables": {
+    "RetailDemandVar": { "type": "continuous", "domain": [0, 1], "unit": "variance" },
+    "LeadTime": { "type": "continuous", "domain": [0, 30], "unit": "days" },
+    "OrderBatching": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "SupplyChainVolatility": { "type": "continuous", "domain": [0, 5], "unit": "multiplier" },
+    "InventoryStockouts": { "type": "continuous", "domain": [0, 1], "unit": "prob" }
+  },
+  "edges": [
+    {"source": "RetailDemandVar", "target": "SupplyChainVolatility", "type": "causes", "strength": 0.50},
+    {"source": "LeadTime", "target": "SupplyChainVolatility", "type": "causes", "strength": 0.85, "description": "Longer lead times amplify order distortion"},
+    {"source": "OrderBatching", "target": "SupplyChainVolatility", "type": "causes", "strength": 0.70},
+    {"source": "SupplyChainVolatility", "target": "InventoryStockouts", "type": "causes", "strength": 0.90}
+  ],
+  "structural_equations": {
+    "SupplyChainVolatility": "1.0 + 0.4*RetailDemandVar + 0.8*(LeadTime/30.0) + 0.5*OrderBatching",
+    "InventoryStockouts": "0.1 * SupplyChainVolatility"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Forrester, 1961)",
+    "tags": ["supply-chain", "volatility", "demand", "inventory"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "blue_ocean_strategy",
+    "name": "Blue Ocean Strategy",
+    "version": "1.0.0",
+    "domain": "strategy",
+    "description": "Kim and Mauborgne's framework for creating uncontested market space and making competition irrelevant via Value Innovation."
+  },
+  "variables": {
+    "Differentiation": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Level of uniqueness vs existing market offerings"
+    },
+    "CostReduction": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Elimination of non-value features to reduce price"
+    },
+    "ValueInnovation": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Simultaneous pursuit of differentiation and low cost"
+    },
+    "CompetitiveIntensity": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Level of direct competition (Red Ocean vs Blue Ocean)"
+    },
+    "ProfitPotential": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Expected strategic profit margin"
+    }
+  },
+  "edges": [
+    {"source": "Differentiation", "target": "ValueInnovation", "type": "causes", "strength": 0.60},
+    {"source": "CostReduction", "target": "ValueInnovation", "type": "causes", "strength": 0.60},
+    {"source": "ValueInnovation", "target": "CompetitiveIntensity", "type": "inhibits", "strength": 0.85, "description": "True innovation moves the firm to a Blue Ocean"},
+    {"source": "ValueInnovation", "target": "ProfitPotential", "type": "causes", "strength": 0.70},
+    {"source": "CompetitiveIntensity", "target": "ProfitPotential", "type": "inhibits", "strength": 0.75, "description": "Intense competition erodes margins"}
+  ],
+  "structural_equations": {
+    "ValueInnovation": "0.5*Differentiation + 0.5*CostReduction",
+    "CompetitiveIntensity": "1.0 - 0.9*ValueInnovation",
+    "ProfitPotential": "0.2 + 0.8*ValueInnovation - 0.5*CompetitiveIntensity"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Kim & Mauborgne, 2004)",
+    "tags": ["innovation", "differentiation", "cost", "blue-ocean"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

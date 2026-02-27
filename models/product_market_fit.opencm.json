@@ -1,0 +1,32 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "product_market_fit",
+    "name": "Product-Market Fit (PMF)",
+    "version": "1.0.0",
+    "domain": "marketing",
+    "description": "Models the causal drivers of PMF, focusing on user retention, organic growth, and product-market resonance."
+  },
+  "variables": {
+    "UserRetentionRate": { "type": "continuous", "domain": [0, 1], "unit": "rate" },
+    "OrganicGrowthRate": { "type": "continuous", "domain": [0, 1], "unit": "rate" },
+    "MarketResonance": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "PMF_Score": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "RevenueVelocity": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "UserRetentionRate", "target": "PMF_Score", "type": "causes", "strength": 0.90, "description": "Retention is the best proxy for PMF"},
+    {"source": "MarketResonance", "target": "PMF_Score", "type": "causes", "strength": 0.70},
+    {"source": "PMF_Score", "target": "OrganicGrowthRate", "type": "causes", "strength": 0.85, "description": "True PMF drives word-of-mouth"},
+    {"source": "PMF_Score", "target": "RevenueVelocity", "type": "causes", "strength": 0.80}
+  ],
+  "structural_equations": {
+    "PMF_Score": "0.6*UserRetentionRate + 0.4*MarketResonance",
+    "OrganicGrowthRate": "max(0, PMF_Score - 0.2) * 0.5"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["marketing", "startup", "product", "growth", "pmf"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

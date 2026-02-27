@@ -1,0 +1,31 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "innovation_funnel",
+    "name": "Innovation Funnel",
+    "version": "1.0.0",
+    "domain": "technology",
+    "description": "Models the survival and transformation of ideas into market-ready products through screening and development."
+  },
+  "variables": {
+    "IdeationVolume": { "type": "continuous", "domain": [0, 1000], "unit": "ideas" },
+    "ScreeningEfficiency": { "type": "continuous", "domain": [0, 1], "unit": "ratio" },
+    "DevelopmentYield": { "type": "continuous", "domain": [0, 1], "unit": "ratio" },
+    "MarketLaunchReady": { "type": "continuous", "domain": [0, 100], "unit": "products" },
+    "R_and_D_Spend": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "IdeationVolume", "target": "MarketLaunchReady", "type": "causes", "strength": 0.40},
+    {"source": "ScreeningEfficiency", "target": "MarketLaunchReady", "type": "causes", "strength": 0.70, "description": "High quality screening reduces waste"},
+    {"source": "R_and_D_Spend", "target": "IdeationVolume", "type": "causes", "strength": 0.65},
+    {"source": "DevelopmentYield", "target": "MarketLaunchReady", "type": "causes", "strength": 0.90}
+  ],
+  "structural_equations": {
+    "MarketLaunchReady": "IdeationVolume * (1.0 - ScreeningEfficiency) * DevelopmentYield"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["innovation", "funnel", "r-and-d", "product-development"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

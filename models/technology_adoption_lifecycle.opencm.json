@@ -1,0 +1,49 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "technology_adoption_lifecycle",
+    "name": "Technology Adoption Lifecycle",
+    "version": "1.0.0",
+    "domain": "organization",
+    "description": "Rogers' Diffusion of Innovations + Moore's Chasm model — how technology spreads through adopter segments and the causal factors driving successful adoption."
+  },
+  "variables": {
+    "TechnologyReadiness": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Maturity and reliability of the technology"},
+    "PerceivedValue": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Perceived benefits relative to status quo"},
+    "SwitchingCost": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Cost and effort to adopt new technology"},
+    "NetworkEffects": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Value increase as more users adopt"},
+    "InnovatorAdoption": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "Adoption rate among innovators (2.5%)"},
+    "EarlyAdopterAdoption": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "Adoption rate among early adopters (13.5%)"},
+    "ChasmCrossing": {"type": "continuous", "domain": [0, 1], "unit": "probability", "description": "Probability of crossing the chasm to mainstream"},
+    "EarlyMajorityAdoption": {"type": "continuous", "domain": [0, 1], "unit": "rate", "description": "Adoption rate among early majority (34%)"},
+    "MarketPenetration": {"type": "continuous", "domain": [0, 1], "unit": "%", "description": "Overall market penetration"},
+    "CompetitiveAdvantage": {"type": "continuous", "domain": [0, 1], "unit": "index", "description": "Competitive advantage from technology adoption"}
+  },
+  "edges": [
+    {"source": "TechnologyReadiness", "target": "InnovatorAdoption", "type": "causes", "strength": 0.60},
+    {"source": "PerceivedValue", "target": "InnovatorAdoption", "type": "causes", "strength": 0.70},
+    {"source": "InnovatorAdoption", "target": "EarlyAdopterAdoption", "type": "causes", "strength": 0.65, "description": "Social proof from innovators"},
+    {"source": "PerceivedValue", "target": "EarlyAdopterAdoption", "type": "causes", "strength": 0.55},
+    {"source": "EarlyAdopterAdoption", "target": "ChasmCrossing", "type": "causes", "strength": 0.50},
+    {"source": "TechnologyReadiness", "target": "ChasmCrossing", "type": "causes", "strength": 0.60, "description": "Whole product completeness required"},
+    {"source": "SwitchingCost", "target": "ChasmCrossing", "type": "inhibits", "strength": 0.65, "description": "High switching costs widen the chasm"},
+    {"source": "ChasmCrossing", "target": "EarlyMajorityAdoption", "type": "causes", "strength": 0.85},
+    {"source": "NetworkEffects", "target": "EarlyMajorityAdoption", "type": "causes", "strength": 0.55},
+    {"source": "EarlyMajorityAdoption", "target": "MarketPenetration", "type": "causes", "strength": 0.80},
+    {"source": "MarketPenetration", "target": "CompetitiveAdvantage", "type": "causes", "strength": 0.50}
+  ],
+  "structural_equations": {
+    "InnovatorAdoption": "0.05 + 0.30*TechnologyReadiness + 0.35*PerceivedValue",
+    "EarlyAdopterAdoption": "0.02 + 0.40*InnovatorAdoption + 0.25*PerceivedValue",
+    "ChasmCrossing": "0.10 + 0.25*EarlyAdopterAdoption + 0.30*TechnologyReadiness - 0.30*SwitchingCost",
+    "EarlyMajorityAdoption": "0.01 + 0.60*ChasmCrossing + 0.20*NetworkEffects",
+    "MarketPenetration": "0.05 + 0.70*EarlyMajorityAdoption"
+  },
+  "assumptions": ["Adoption follows S-curve pattern", "The chasm is the primary failure point", "Network effects accelerate post-chasm adoption", "Adopter categories are distinct", "Network effects → adoption feedback loop is linearized for DAG constraint; in practice this is a reinforcing cycle"],
+  "metadata": {
+    "author": "GetCognition (adapted from Rogers, 1962 & Moore, 1991)",
+    "citation": "Moore, G.A. (1991). Crossing the Chasm. HarperBusiness; Rogers, E.M. (1962). Diffusion of Innovations. Free Press.",
+    "license": "CC-BY-SA-4.0",
+    "tags": ["adoption", "diffusion", "chasm", "innovation", "network-effects", "technology"]
+  }
+}

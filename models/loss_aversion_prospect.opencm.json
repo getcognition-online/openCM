@@ -1,0 +1,28 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "loss_aversion_prospect",
+    "name": "Loss Aversion (Prospect Theory)",
+    "version": "1.0.0",
+    "domain": "psychology",
+    "description": "Kahneman and Tversky's model showing that the pain of losing is twice as powerful as the joy of gaining."
+  },
+  "variables": {
+    "GainMagnitude": { "type": "continuous", "domain": [0, 1000], "unit": "currency" },
+    "LossMagnitude": { "type": "continuous", "domain": [0, 1000], "unit": "currency" },
+    "PerceivedUtility": { "type": "continuous", "domain": [-3000, 1000], "unit": "utility" },
+    "DecisionWeights": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "GainMagnitude", "target": "PerceivedUtility", "type": "causes", "strength": 1.0},
+    {"source": "LossMagnitude", "target": "PerceivedUtility", "type": "inhibits", "strength": 1.0, "description": "Losses loom larger than gains (coefficient ~2.25)"}
+  ],
+  "structural_equations": {
+    "PerceivedUtility": "pow(GainMagnitude, 0.88) - 2.25 * pow(LossMagnitude, 0.88)"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Kahneman & Tversky, 1979)",
+    "tags": ["psychology", "behavioral-economics", "risk", "utility"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

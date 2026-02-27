@@ -1,0 +1,32 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "librarian_self_assessment",
+    "name": "Librarian Internal Capability Model",
+    "version": "1.0.0",
+    "domain": "meta-logic",
+    "description": "Models the Librarian's own ability to perform strategic analysis based on its internal components and data quality."
+  },
+  "variables": {
+    "EngineFidelity": { "type": "continuous", "domain": [0, 1], "unit": "accuracy_index", "description": "Precision of structural equation solving." },
+    "RegistryMaturity": { "type": "continuous", "domain": [0, 50], "unit": "model_count", "description": "Number of validated OpenCM models in the registry." },
+    "OntologyConnectivity": { "type": "continuous", "domain": [0, 1], "unit": "index", "description": "Density of links in the spiritual-strategic knowledge graph." },
+    "StructuralReasoningPower": { "type": "continuous", "domain": [0, 1], "unit": "power_index" },
+    "AssessmentAuthority": { "type": "continuous", "domain": [0, 1], "unit": "authority_prob", "description": "The system's confidence in evaluating external entities." }
+  },
+  "edges": [
+    {"source": "EngineFidelity", "target": "StructuralReasoningPower", "type": "causes", "strength": 0.95},
+    {"source": "RegistryMaturity", "target": "StructuralReasoningPower", "type": "causes", "strength": 0.80},
+    {"source": "OntologyConnectivity", "target": "AssessmentAuthority", "type": "causes", "strength": 0.70},
+    {"source": "StructuralReasoningPower", "target": "AssessmentAuthority", "type": "causes", "strength": 0.90}
+  ],
+  "structural_equations": {
+    "StructuralReasoningPower": "(0.6 * EngineFidelity) + (0.4 * (RegistryMaturity / 50.0))",
+    "AssessmentAuthority": "min(1.0, StructuralReasoningPower * (0.8 + 0.2 * OntologyConnectivity))"
+  },
+  "metadata": {
+    "author": "The Librarian (Self-Referential)",
+    "tags": ["meta-logic", "self-assessment", "capability", "honesty"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

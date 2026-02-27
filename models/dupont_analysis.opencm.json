@@ -1,0 +1,33 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "dupont_analysis",
+    "name": "DuPont Analysis",
+    "version": "1.0.0",
+    "domain": "finance",
+    "description": "Decomposes Return on Equity (ROE) into three causal drivers: profit margin, asset turnover, and financial leverage."
+  },
+  "variables": {
+    "NetProfitMargin": { "type": "continuous", "domain": [0, 0.5], "unit": "rate" },
+    "AssetTurnover": { "type": "continuous", "domain": [0, 5], "unit": "ratio" },
+    "EquityMultiplier": { "type": "continuous", "domain": [1, 10], "unit": "leverage" },
+    "ROE": { "type": "continuous", "domain": [0, 1.0], "unit": "rate" },
+    "TotalRevenue": { "type": "continuous", "domain": [0, 10000000], "unit": "currency" },
+    "AverageAssets": { "type": "continuous", "domain": [0, 50000000], "unit": "currency" }
+  },
+  "edges": [
+    {"source": "NetProfitMargin", "target": "ROE", "type": "causes", "strength": 0.90},
+    {"source": "AssetTurnover", "target": "ROE", "type": "causes", "strength": 0.80},
+    {"source": "EquityMultiplier", "target": "ROE", "type": "causes", "strength": 0.70},
+    {"source": "TotalRevenue", "target": "AssetTurnover", "type": "causes", "strength": 0.60}
+  ],
+  "structural_equations": {
+    "ROE": "NetProfitMargin * AssetTurnover * EquityMultiplier",
+    "AssetTurnover": "TotalRevenue / AverageAssets"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["finance", "roe", "profitability", "efficiency", "leverage"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "rfm_loyalty_drivers",
+    "name": "RFM Customer Loyalty Drivers",
+    "version": "1.0.0",
+    "domain": "marketing",
+    "description": "Causal drivers of Customer Lifetime Value (CLV) based on Recency, Frequency, and Monetary segments."
+  },
+  "variables": {
+    "Recency": { "type": "continuous", "domain": [0, 365], "unit": "days", "description": "Days since last purchase (inverse driver)" },
+    "Frequency": { "type": "continuous", "domain": [1, 50], "unit": "count", "description": "Total purchases in period" },
+    "MonetaryValue": { "type": "continuous", "domain": [0, 10000], "unit": "currency", "description": "Total spend in period" },
+    "EngagementScore": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "ChurnProbability": { "type": "continuous", "domain": [0, 1], "unit": "prob" },
+    "CLV": { "type": "continuous", "domain": [0, 50000], "unit": "currency" }
+  },
+  "edges": [
+    {"source": "Recency", "target": "ChurnProbability", "type": "causes", "strength": 0.85, "description": "Longer recency gaps correlate with churn"},
+    {"source": "Frequency", "target": "EngagementScore", "type": "causes", "strength": 0.75},
+    {"source": "MonetaryValue", "target": "CLV", "type": "causes", "strength": 0.95},
+    {"source": "EngagementScore", "target": "CLV", "type": "causes", "strength": 0.60},
+    {"source": "ChurnProbability", "target": "CLV", "type": "inhibits", "strength": 0.90}
+  ],
+  "structural_equations": {
+    "EngagementScore": "0.1 + 0.8*(Frequency/50.0) - 0.2*(Recency/365.0)",
+    "ChurnProbability": "0.1 + 0.8*(Recency/365.0)",
+    "CLV": "MonetaryValue * (1.0 - ChurnProbability) * 1.5"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["customer", "loyalty", "clv", "rfm", "churn"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

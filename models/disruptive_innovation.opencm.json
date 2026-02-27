@@ -1,0 +1,32 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "disruptive_innovation",
+    "name": "Disruptive Innovation",
+    "version": "1.0.0",
+    "domain": "strategy",
+    "description": "Clayton Christensen's model where a new entrant with simpler/cheaper tech captures the low-end of a market and then moves upmarket to displace incumbents."
+  },
+  "variables": {
+    "IncumbentPerformanceOverhang": { "type": "continuous", "domain": [0, 1], "unit": "index", "description": "Performance exceeding average user needs" },
+    "DisruptorCostAdvantage": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "LowEndMarketCapture": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "UpmarketMomentum": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "IncumbentDisplacement": { "type": "continuous", "domain": [0, 1], "unit": "prob" }
+  },
+  "edges": [
+    {"source": "IncumbentPerformanceOverhang", "target": "LowEndMarketCapture", "type": "causes", "strength": 0.75, "description": "Over-served users are vulnerable to disruptors"},
+    {"source": "DisruptorCostAdvantage", "target": "LowEndMarketCapture", "type": "causes", "strength": 0.80},
+    {"source": "LowEndMarketCapture", "target": "UpmarketMomentum", "type": "causes", "strength": 0.70},
+    {"source": "UpmarketMomentum", "target": "IncumbentDisplacement", "type": "causes", "strength": 0.90}
+  ],
+  "structural_equations": {
+    "LowEndMarketCapture": "0.4*IncumbentPerformanceOverhang + 0.6*DisruptorCostAdvantage",
+    "IncumbentDisplacement": "max(0, UpmarketMomentum - 0.3) * 1.4"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Clayton Christensen, 1997)",
+    "tags": ["strategy", "innovation", "disruption", "competition"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

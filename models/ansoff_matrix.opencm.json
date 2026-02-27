@@ -1,0 +1,55 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "ansoff_matrix",
+    "name": "Ansoff Matrix Strategy",
+    "version": "1.0.0",
+    "domain": "strategy",
+    "description": "Igor Ansoff's Product/Market Expansion Grid for identifying growth opportunities through market penetration, product development, market development, and diversification."
+  },
+  "variables": {
+    "MarketPenetration": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Increasing market share for existing products in existing markets"
+    },
+    "MarketDevelopment": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Entering new markets with existing products"
+    },
+    "ProductDevelopment": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Creating new products for existing markets"
+    },
+    "Diversification": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Creating new products for new markets (highest risk)"
+    },
+    "RevenueGrowth": {
+      "type": "continuous", "domain": [0, 1], "unit": "index",
+      "description": "Projected increase in company revenue"
+    },
+    "StrategicRisk": {
+      "type": "continuous", "domain": [0, 1], "unit": "risk_score",
+      "description": "Overall risk level of the chosen strategy"
+    }
+  },
+  "edges": [
+    {"source": "MarketPenetration", "target": "RevenueGrowth", "type": "causes", "strength": 0.40, "description": "Lower but steadier growth impact"},
+    {"source": "MarketDevelopment", "target": "RevenueGrowth", "type": "causes", "strength": 0.60, "description": "Moderate growth via new channels/geographies"},
+    {"source": "ProductDevelopment", "target": "RevenueGrowth", "type": "causes", "strength": 0.65, "description": "Growth via innovation in known markets"},
+    {"source": "Diversification", "target": "RevenueGrowth", "type": "causes", "strength": 0.85, "description": "High growth potential but high failure rate"},
+    {"source": "MarketPenetration", "target": "StrategicRisk", "type": "causes", "strength": 0.10, "description": "Lowest risk growth path"},
+    {"source": "MarketDevelopment", "target": "StrategicRisk", "type": "causes", "strength": 0.45, "description": "Risk of unknown market dynamics"},
+    {"source": "ProductDevelopment", "target": "StrategicRisk", "type": "causes", "strength": 0.50, "description": "Risk of R&D failure or lack of adoption"},
+    {"source": "Diversification", "target": "StrategicRisk", "type": "causes", "strength": 0.90, "description": "Highest risk (unfamiliar product AND market)"}
+  ],
+  "structural_equations": {
+    "RevenueGrowth": "0.4*MarketPenetration + 0.6*MarketDevelopment + 0.65*ProductDevelopment + 0.85*Diversification",
+    "StrategicRisk": "0.1*MarketPenetration + 0.45*MarketDevelopment + 0.5*ProductDevelopment + 0.9*Diversification"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Igor Ansoff, 1957)",
+    "tags": ["growth", "expansion", "risk", "product", "market"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

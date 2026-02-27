@@ -1,0 +1,31 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "jit_efficiency",
+    "name": "JIT Operations Efficiency",
+    "version": "1.0.0",
+    "domain": "operations",
+    "description": "Causal drivers of Just-In-Time (JIT) manufacturing efficiency, focusing on inventory, lead times, and throughput."
+  },
+  "variables": {
+    "InventoryLevels": { "type": "continuous", "domain": [0, 1], "unit": "index" },
+    "LeadTime": { "type": "continuous", "domain": [0, 30], "unit": "days" },
+    "ProductionThroughput": { "type": "continuous", "domain": [0, 1000], "unit": "units/day" },
+    "OperatingCost": { "type": "continuous", "domain": [0, 1], "unit": "cost_index" },
+    "SupplyChainAgility": { "type": "continuous", "domain": [0, 1], "unit": "index" }
+  },
+  "edges": [
+    {"source": "InventoryLevels", "target": "OperatingCost", "type": "causes", "strength": 0.90},
+    {"source": "LeadTime", "target": "OperatingCost", "type": "causes", "strength": 0.60},
+    {"source": "SupplyChainAgility", "target": "InventoryLevels", "type": "inhibits", "strength": 0.70},
+    {"source": "ProductionThroughput", "target": "OperatingCost", "type": "inhibits", "strength": 0.40, "description": "Economies of scale"}
+  ],
+  "structural_equations": {
+    "OperatingCost": "0.1 + 0.7*InventoryLevels + 0.2*(LeadTime/30.0) - 0.1*(ProductionThroughput/1000.0)"
+  },
+  "metadata": {
+    "author": "GetCognition",
+    "tags": ["operations", "jit", "efficiency", "inventory", "manufacturing"],
+    "license": "CC-BY-SA-4.0"
+  }
+}

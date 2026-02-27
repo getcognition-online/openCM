@@ -1,0 +1,33 @@
+{
+  "opencm_version": "1.0",
+  "model": {
+    "id": "planned_behavior",
+    "name": "Theory of Planned Behavior",
+    "version": "1.0.0",
+    "domain": "psychology",
+    "description": "Icek Ajzen's model linking beliefs and behavior via attitudes, subjective norms, and perceived behavioral control."
+  },
+  "variables": {
+    "AttitudeTowardsBehavior": { "type": "continuous", "domain": [0, 1], "unit": "score" },
+    "SubjectiveNorms": { "type": "continuous", "domain": [0, 1], "unit": "score" },
+    "PerceivedBehavioralControl": { "type": "continuous", "domain": [0, 1], "unit": "score" },
+    "Intention": { "type": "continuous", "domain": [0, 1], "unit": "score" },
+    "BehaviorResult": { "type": "continuous", "domain": [0, 1], "unit": "score" }
+  },
+  "edges": [
+    {"source": "AttitudeTowardsBehavior", "target": "Intention", "type": "causes", "strength": 0.60},
+    {"source": "SubjectiveNorms", "target": "Intention", "type": "causes", "strength": 0.40},
+    {"source": "PerceivedBehavioralControl", "target": "Intention", "type": "causes", "strength": 0.70},
+    {"source": "Intention", "target": "BehaviorResult", "type": "causes", "strength": 0.85},
+    {"source": "PerceivedBehavioralControl", "target": "BehaviorResult", "type": "causes", "strength": 0.50, "description": "Direct impact independent of intention"}
+  ],
+  "structural_equations": {
+    "Intention": "0.33*AttitudeTowardsBehavior + 0.2*SubjectiveNorms + 0.4*PerceivedBehavioralControl",
+    "BehaviorResult": "0.7*Intention + 0.3*PerceivedBehavioralControl"
+  },
+  "metadata": {
+    "author": "GetCognition (adapted from Icek Ajzen, 1985)",
+    "tags": ["psychology", "behavior", "intention", "ajzen"],
+    "license": "CC-BY-SA-4.0"
+  }
+}
