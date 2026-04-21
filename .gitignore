@@ -50,3 +50,10 @@ venv/
 *.tar.gz
 __pycache__/
 .DS_Store
+node_modules/
+.next/
+*.dat
+*.bin
+*.pt
+__pycache__/
+.DS_Store
